@@ -9,9 +9,9 @@ This document tracks every minute of the day that currently lacks a literary quo
 | Metric | Value |
 |---|---|
 | Total minutes in a day | 1,440 |
-| Minutes with at least one quote | 923 |
-| **Minutes with no quote (gaps)** | **517** |
-| Overall coverage | **64.1 %** |
+| Minutes with at least one quote | 924 |
+| **Minutes with no quote (gaps)** | **516** |
+| Overall coverage | **64.2 %** |
 
 ### Coverage by Hour
 
@@ -33,7 +33,7 @@ This document tracks every minute of the day that currently lacks a literary quo
 | 13:xx | 37 / 60 | 23 | 62 % |
 | 14:xx | 30 / 60 | 30 | 50 % |
 | 15:xx | 39 / 60 | 21 | 65 % |
-| 16:xx | 54 / 60 | 6  | 90 % ✅ |
+| 16:xx | 55 / 60 | 5  | 92 % ✅ |
 | 17:xx | 32 / 60 | 28 | 53 % |
 | 18:xx | 32 / 60 | 28 | 53 % |
 | 19:xx | 33 / 60 | 27 | 55 % |
@@ -98,8 +98,8 @@ Times are in 24-hour `H:MM` format, matching the `timecode` field in the dataset
 ### Hour 15 — 21 missing
 `15:02` `15:06` `15:11` `15:12` `15:17` `15:18` `15:19` `15:21` `15:22` `15:24` `15:26` `15:28` `15:31` `15:38` `15:42` `15:43` `15:46` `15:47` `15:48` `15:52` `15:54`
 
-### Hour 16 — 6 missing ✅ (highest coverage)
-`16:27` `16:36` `16:38` `16:41` `16:43` `16:44`
+### Hour 16 — 5 missing ✅ (highest coverage)
+`16:27` `16:36` `16:38` `16:41` `16:44`
 
 ### Hour 17 — 28 missing
 `17:07` `17:08` `17:09` `17:11` `17:13` `17:16` `17:17` `17:22` `17:24` `17:26` `17:27` `17:28` `17:29` `17:31` `17:32` `17:34` `17:35` `17:36` `17:38` `17:39` `17:41` `17:43` `17:44` `17:47` `17:49` `17:51` `17:52` `17:56`
@@ -148,7 +148,7 @@ Target hours in order of lowest coverage first, then finish the near-complete ho
 16. **12:xx** / **23:xx** — 73 % (16 missing each)
 17. **00:xx** / **09:xx** — 75 % (15 missing each)
 18. **08:xx** / **11:xx** — 77 % (14 missing each)
-19. **16:xx** — 90 % (6 missing) — finish last
+19. **16:xx** — 92 % (5 missing) — finish last
 
 ---
 
