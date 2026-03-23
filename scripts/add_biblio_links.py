@@ -1,22 +1,31 @@
 #!/usr/bin/env python3
 """Populate isbn and biblio_link fields in docs/litclock.json.
 
-For each entry that lacks both fields the script:
-  1. Queries the Open Library search API to find an ISBN-13 for the book.
-  2. If an ISBN is found  → records ``isbn`` and an ISBN-keyed Biblio.com URL.
-  3. If no ISBN is found  → records a title/author keyword search URL on
-     Biblio.com (no ``isbn`` field is written for that entry).
+The script processes every entry that is missing ``isbn``, ``biblio_link``,
+or both, according to the following rules:
+
+* If an entry already has ``isbn`` but no ``biblio_link``, the ISBN-keyed
+  Biblio.com URL is generated directly — no API call is made and the
+  existing ``isbn`` value is preserved.
+* In online mode (default), entries without ``isbn`` are looked up via the
+  Open Library search API.  If an ISBN-13 is found, both ``isbn`` and an
+  ISBN-keyed Biblio.com URL are written.
+* If no ISBN is found (or in ``--offline`` mode), a title/author keyword
+  search URL on Biblio.com is written; no ``isbn`` field is added.
+
+Entries that already have both ``isbn`` and ``biblio_link`` are skipped
+entirely.
 
 Usage
 -----
-  # Full run – look up ISBNs via Open Library (requires internet)
+  # Online run – query Open Library for missing ISBNs (requires internet)
   python3 scripts/add_biblio_links.py
 
   # Offline run – skip API calls, write title/author search URLs for every
-  # entry that still lacks a biblio_link (useful when no internet is available)
+  # entry that lacks a biblio_link (useful when no internet is available)
   python3 scripts/add_biblio_links.py --offline
 
-  # Dry-run / smoke test – process only the first N unique books
+  # Limit – process only the first N unique (book, author) pairs
   python3 scripts/add_biblio_links.py --limit 10
 """
 
@@ -118,11 +127,21 @@ def main() -> None:
 
     # ------------------------------------------------------------------
     # Look up ISBNs (or skip in offline mode)
+    # Only query the API for books that don't already have an isbn.
     # ------------------------------------------------------------------
     isbn_cache: "dict[tuple[str, str], str | None]" = {}
     for i, key in enumerate(work_keys):
         book, author = key
-        if args.offline:
+        # Check whether any entry for this key already carries an isbn.
+        existing_isbn = next(
+            (str(entries[idx].get("isbn", "")) for idx in needs_update[key]
+             if entries[idx].get("isbn")),
+            None,
+        )
+        if existing_isbn:
+            # Use the curated isbn as-is; no API call needed.
+            isbn_cache[key] = existing_isbn
+        elif args.offline:
             isbn_cache[key] = None
         else:
             print(f"[{i + 1}/{len(work_keys)}] '{book}' by '{author}'")
@@ -152,9 +171,11 @@ def main() -> None:
 
     print(f"\nUpdated : {updated} entries")
 
-    with open(LITCLOCK_JSON, "w", encoding="utf-8") as fh:
+    tmp_path = LITCLOCK_JSON.with_suffix(LITCLOCK_JSON.suffix + ".tmp")
+    with tmp_path.open("w", encoding="utf-8") as fh:
         json.dump(entries, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
+    tmp_path.replace(LITCLOCK_JSON)
 
     print(f"Saved   : {LITCLOCK_JSON}")
 
