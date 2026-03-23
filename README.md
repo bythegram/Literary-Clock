@@ -39,7 +39,8 @@ Literary-Clock/
 │   ├── litclock.json               # Dataset: 1,400+ time-tagged literary quotes
 │   └── favicon.ico
 ├── scripts/
-│   └── add_biblio_links.py         # Populates isbn and biblio_link fields in litclock.json
+│   ├── add_biblio_links.py         # Populates isbn and biblio_link fields in litclock.json
+│   └── add_public_domain.py        # Populates public_domain field via Open Library API
 ├── package.json                    # Dev dependency for local server (npx serve)
 ├── README.md
 └── ROADMAP.md                      # Coverage gaps and research strategy
@@ -94,13 +95,31 @@ The quote data lives in `docs/litclock.json`. Each entry must conform to the fol
 }
 ```
 
-| Field | Description |
-|---|---|
-| `timecode` | 24-hour time string matching `H:MM` format (e.g. `"13:01"`) |
-| `label` | Exact substring of the quote that represents the time (lowercase) |
-| `quote` | Full sentence or passage containing the time reference |
-| `book` | Title of the source work |
-| `author` | Author of the source work |
+| Field | Required | Description |
+|---|---|---|
+| `timecode` | **Yes** | 24-hour time string in `H:MM` format (e.g. `"13:01"`) |
+| `label` | **Yes** | Exact substring of the quote that represents the time (lowercase) |
+| `quote` | **Yes** | Full sentence or passage containing the time reference |
+| `book` | **Yes** | Title of the source work |
+| `author` | **Yes** | Author of the source work |
+| `isbn` | No | ISBN-13 (preferred) or ISBN-10, populated by `add_biblio_links.py` |
+| `biblio_link` | No | Biblio.com search URL, populated by `add_biblio_links.py` |
+| `public_domain` | No | `true` if the work is in the public domain, `false` otherwise; populated by `add_public_domain.py` |
+
+The `isbn`, `biblio_link`, and `public_domain` fields are optional in new entries — they are populated automatically by the helper scripts described below.
+
+### Helper Scripts
+
+```bash
+# Populate isbn and biblio_link for entries that are missing them
+python3 scripts/add_biblio_links.py
+
+# Populate public_domain for entries that are missing it (requires internet)
+python3 scripts/add_public_domain.py
+
+# Run offline (sets public_domain=false where unknown, skips API calls)
+python3 scripts/add_public_domain.py --offline
+```
 
 ---
 

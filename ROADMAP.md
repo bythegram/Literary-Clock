@@ -264,6 +264,11 @@ Key rules:
 - `label` must be a verbatim lowercase substring of `quote`.
 - `quote` should be a complete sentence or self-contained passage — avoid fragments that lose their meaning out of context.
 - Prefer public-domain works or quotes short enough to qualify as fair use.
+- The `isbn`, `biblio_link`, and `public_domain` fields are optional in the entry itself — run the helper scripts after adding entries to populate them:
+  ```bash
+  python3 scripts/add_biblio_links.py
+  python3 scripts/add_public_domain.py
+  ```
 
 ---
 
