@@ -20,7 +20,7 @@ These instructions give AI coding agents the context needed to work effectively 
 Literary-Clock/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml          # GitHub Actions: push docs/ to gh-pages on every merge to main
+│       └── deploy.yml          # GitHub Actions: push docs/ to gh-pages on pushes to main + manual runs
 ├── docs/                       # ← The entire deployed application lives here
 │   ├── index.html              # App shell; loads Bootstrap 5 from CDN, Google Fonts, app.js
 │   ├── app.js                  # All clock logic (ES5 IIFE); no build or bundler
@@ -29,7 +29,7 @@ Literary-Clock/
 │   └── favicon.ico
 ├── scripts/
 │   └── add_biblio_links.py     # Enriches litclock.json with isbn + biblio_link fields
-├── package.json                # Single dev-dependency: `npx serve docs` for local server
+├── package.json                # No declared deps; dev server run via `npx serve docs`
 ├── README.md                   # Setup, usage, and contributor guide
 └── ROADMAP.md                  # Coverage-gap tracker and research strategy
 ```
@@ -125,7 +125,7 @@ Every entry is a JSON object with these fields:
 ### Local Development
 
 ```bash
-npm install      # one-time — no real deps, just registers the `start` script
+npm install      # optional — only needed if/when dependencies are added; `npm start` works without it
 npm start        # launches `npx serve docs` on http://localhost:3000/
 ```
 
@@ -224,10 +224,17 @@ for i, e in enumerate(entries):
         errors.append(f"[{i}] label not in quote — timecode {tc}")
     h, m = tc.split(':', 1)
     try:
-        if h.startswith('0') and len(h) > 1:   # catches leading zero on hour (e.g. "09")
-            errors.append(f"[{i}] bad timecode format (leading zero on hour): {tc}")
-    except Exception:
-        errors.append(f"[{i}] non-numeric hour in timecode: {tc}")
+        hour = int(h)
+        minute = int(m)
+    except ValueError:
+        errors.append(f"[{i}] non-numeric timecode: {tc}")
+        continue
+    if not (0 <= hour <= 23):
+        errors.append(f"[{i}] hour out of range (0–23): {tc}")
+    if not (0 <= minute <= 59):
+        errors.append(f"[{i}] minute out of range (0–59): {tc}")
+    if len(h) > 1 and h.startswith('0'):
+        errors.append(f"[{i}] bad timecode format (leading zero on hour): {tc}")
     if len(m) != 2:
         errors.append(f"[{i}] minute not zero-padded: {tc}")
 print('\n'.join(errors) if errors else 'All entries valid')
@@ -258,7 +265,7 @@ Run `npm start`, open `http://localhost:3000/`, and manually set your system clo
 3. Recalculate the percentage.
 4. Update the top-level "Minutes with at least one quote" and "Minutes with no quote" summary metrics.
 
-Current overall coverage is ~90.9% (1,309 / 1,440 minutes covered). Priority hours for gap-filling are `10:xx`, `14:xx`, `21:xx`, and `22:xx` (all at ~78% coverage).
+Current overall coverage is ~90.9% (1,309 / 1,440 minutes covered). Priority hours for gap-filling are `10:xx`, `14:xx`, `21:xx`, and `22:xx` (currently around 78–80% coverage).
 
 ---
 
