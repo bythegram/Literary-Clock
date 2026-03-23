@@ -9,15 +9,15 @@ This document tracks every minute of the day that currently lacks a literary quo
 | Metric | Value |
 |---|---|
 | Total minutes in a day | 1,440 |
-| Minutes with at least one quote | 924 |
-| **Minutes with no quote (gaps)** | **516** |
+| Minutes with at least one quote | 925 |
+| **Minutes with no quote (gaps)** | **515** |
 | Overall coverage | **64.2 %** |
 
 ### Coverage by Hour
 
 | Hour | Covered | Missing | Coverage |
 |---|---|---|---|
-| 00:xx (midnight) | 45 / 60 | 15 | 75 % |
+| 00:xx (midnight) | 46 / 60 | 14 | 77 % |
 | 01:xx | 32 / 60 | 28 | 53 % |
 | 02:xx | 35 / 60 | 25 | 58 % |
 | 03:xx | 39 / 60 | 21 | 65 % |
@@ -50,8 +50,8 @@ This document tracks every minute of the day that currently lacks a literary quo
 
 Times are in 24-hour `H:MM` format, matching the `timecode` field in the dataset.
 
-### Hour 00 — 15 missing
-`0:13` `0:19` `0:27` `0:35` `0:36` `0:37` `0:38` `0:39` `0:41` `0:44` `0:46` `0:48` `0:49` `0:51` `0:52`
+### Hour 00 — 14 missing
+`0:19` `0:27` `0:35` `0:36` `0:37` `0:38` `0:39` `0:41` `0:44` `0:46` `0:48` `0:49` `0:51` `0:52`
 
 ### Hour 01 — 28 missing
 `1:02` `1:03` `1:04` `1:05` `1:07` `1:14` `1:18` `1:19` `1:21` `1:31` `1:34` `1:35` `1:36` `1:37` `1:39` `1:41` `1:42` `1:43` `1:47` `1:48` `1:49` `1:52` `1:53` `1:55` `1:56` `1:57` `1:58` `1:59`
@@ -146,7 +146,7 @@ Target hours in order of lowest coverage first, then finish the near-complete ho
 14. **20:xx** — 67 % (20 missing)
 15. **10:xx** — 70 % (18 missing)
 16. **12:xx** / **23:xx** — 73 % (16 missing each)
-17. **00:xx** / **09:xx** — 75 % (15 missing each)
+17. **00:xx** — 77 % (14 missing) · **09:xx** — 75 % (15 missing)
 18. **08:xx** / **11:xx** — 77 % (14 missing each)
 19. **16:xx** — 92 % (5 missing) — finish last
 
