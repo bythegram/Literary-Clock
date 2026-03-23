@@ -22,7 +22,7 @@ A literary clock that displays the current time through quotations from famous n
 | Layer | Technology |
 |---|---|
 | Language | Vanilla JavaScript (ES5 IIFE) |
-| Styling | [Bootstrap 4](https://getbootstrap.com/) (CDN), CSS, Google Fonts |
+| Styling | [Bootstrap 5](https://getbootstrap.com/) (CDN), CSS, Google Fonts |
 | Data | JSON |
 | Hosting | [GitHub Pages](https://pages.github.com/) |
 
@@ -52,8 +52,8 @@ data/
 ### Installation
 
 ```bash
-git clone https://github.com/bythegram/AngularLitClock.git
-cd AngularLitClock
+git clone https://github.com/bythegram/Literary-Clock.git
+cd Literary-Clock
 npm install
 ```
 
