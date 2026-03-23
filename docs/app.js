@@ -26,10 +26,11 @@
       return {
         quote: quote.replace(label, '<strong>' + label + '</strong>'),
         author: '-' + item.author,
-        book: item.book
+        book: item.book,
+        biblio_link: item.biblio_link || null
       };
     }
-    return { quote: time, book: '', author: '' };
+    return { quote: time, book: '', author: '', biblio_link: null };
   }
 
   function updateDisplay(data) {
@@ -39,7 +40,17 @@
     var authorEl = document.getElementById('author');
 
     quoteEl.innerHTML = litTime.quote;
-    bookEl.textContent = litTime.book;
+    if (litTime.biblio_link) {
+      var linkEl = document.createElement('a');
+      linkEl.href = litTime.biblio_link;
+      linkEl.target = '_blank';
+      linkEl.rel = 'noopener noreferrer';
+      linkEl.textContent = litTime.book;
+      bookEl.innerHTML = '';
+      bookEl.appendChild(linkEl);
+    } else {
+      bookEl.textContent = litTime.book;
+    }
     authorEl.textContent = litTime.author;
 
     if (litTime.quote.length > 300) {
