@@ -1,6 +1,6 @@
 # Literally Clock — Data Gap Roadmap
 
-This document tracks every minute of the day that currently lacks a literary quote in `docs/litclock.json` / `data/litclock_annotated.csv`, and outlines a research strategy for filling those gaps.
+This document tracks every minute of the day that currently lacks a literary quote in `docs/litclock.json`, and outlines a research strategy for filling those gaps.
 
 ---
 
@@ -245,14 +245,7 @@ Many of the missing times fall in the awkward "odd minutes" range (e.g. `14:37`,
 ### How to Add a New Quote
 
 1. Find a passage containing a clearly stated time that matches one of the missing timecodes above.
-2. Add a row to `data/litclock_annotated.csv` (or directly to `docs/litclock.json`).
-
-**CSV row format** (pipe-separated within the `quote` field is fine — just keep the five comma-separated columns):
-
-```
-timecode,label,quote,book,author
-14:37,"twenty-three to three","The little clock on the mantelpiece had its hands set at twenty-three to three.","Example Novel","A. N. Author"
-```
+2. Add a new entry directly to `docs/litclock.json`.
 
 **JSON entry format** (the `label` must be an exact substring of `quote`):
 
@@ -271,13 +264,6 @@ Key rules:
 - `label` must be a verbatim lowercase substring of `quote`.
 - `quote` should be a complete sentence or self-contained passage — avoid fragments that lose their meaning out of context.
 - Prefer public-domain works or quotes short enough to qualify as fair use.
-
-After editing the CSV, regenerate `docs/litclock.json` by running:
-
-```bash
-node dist/csv-to-json.js   # if the conversion script exists
-# or manually copy the formatted JSON entry into docs/litclock.json
-```
 
 ---
 

@@ -37,8 +37,6 @@ docs/                           # Deployed app — served directly by GitHub Pag
 ├── style.css                   # Styles (responsive font sizing, portrait layout)
 ├── litclock.json               # Dataset: 1,400+ time-tagged literary quotes
 └── favicon.ico
-data/
-└── litclock_annotated.csv      # Source CSV used to generate litclock.json
 ```
 
 ---
@@ -97,8 +95,6 @@ The quote data lives in `docs/litclock.json`. Each entry must conform to the fol
 | `quote` | Full sentence or passage containing the time reference |
 | `book` | Title of the source work |
 | `author` | Author of the source work |
-
-> **Tip:** The raw CSV source is kept in `data/litclock_annotated.csv` for easier bulk editing.
 
 ---
 
