@@ -165,9 +165,13 @@ def main() -> None:
     current_year = _current_year()
 
     # ------------------------------------------------------------------
-    # Collect unique (book, author) pairs that need processing
+    # Collect unique (book, author) pairs that need processing.
+    # Entries that lack a usable book/author are tracked separately so
+    # they still receive public_domain=False rather than being silently
+    # skipped.
     # ------------------------------------------------------------------
     needs_update: "dict[tuple[str, str], list[int]]" = {}
+    malformed_indices: "list[int]" = []
     for idx, entry in enumerate(entries):
         if not isinstance(entry, dict):
             continue
@@ -177,6 +181,8 @@ def main() -> None:
         author = str(entry.get("author", "")).strip()
         if book and author:
             needs_update.setdefault((book, author), []).append(idx)
+        else:
+            malformed_indices.append(idx)
 
     total_unique = len(needs_update)
     work_keys = list(needs_update.keys())
@@ -186,6 +192,8 @@ def main() -> None:
     mode = "offline" if args.offline else "online (Open Library API)"
     print(f"Mode   : {mode}")
     print(f"Books  : {len(work_keys)} of {total_unique} unique (book, author) pairs")
+    if malformed_indices:
+        print(f"Skipped: {len(malformed_indices)} entries with missing book/author (will be set to false)")
     if not args.offline:
         print(
             f"Year   : {current_year} "
@@ -244,6 +252,11 @@ def main() -> None:
         for idx in indices:
             entries[idx]["public_domain"] = pd_value
             updated += 1
+
+    # Entries with no usable book/author cannot be looked up; mark false.
+    for idx in malformed_indices:
+        entries[idx]["public_domain"] = False
+        updated += 1
 
     pd_true = sum(1 for e in entries if e.get("public_domain") is True)
     pd_false = sum(1 for e in entries if e.get("public_domain") is False)
