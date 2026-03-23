@@ -31,12 +31,18 @@ A literary clock that displays the current time through quotations from famous n
 ## Project Structure
 
 ```
-docs/                           # Deployed app — served directly by GitHub Pages
-├── index.html                  # App shell HTML
-├── app.js                      # Clock logic: shuffle, time-matching, DOM updates
-├── style.css                   # Styles (responsive font sizing, portrait layout)
-├── litclock.json               # Dataset: 1,400+ time-tagged literary quotes
-└── favicon.ico
+Literary-Clock/
+├── docs/                           # Deployed app — served directly by GitHub Pages
+│   ├── index.html                  # App shell HTML
+│   ├── app.js                      # Clock logic: shuffle, time-matching, DOM updates
+│   ├── style.css                   # Styles (responsive font sizing, portrait layout)
+│   ├── litclock.json               # Dataset: 1,400+ time-tagged literary quotes
+│   └── favicon.ico
+├── scripts/
+│   └── add_biblio_links.py         # Populates isbn and biblio_link fields in litclock.json
+├── package.json                    # Dev dependency for local server (npx serve)
+├── README.md
+└── ROADMAP.md                      # Coverage gaps and research strategy
 ```
 
 ---
