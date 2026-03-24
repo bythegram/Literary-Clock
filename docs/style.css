@@ -3,6 +3,11 @@ body {
   font-family: 'Open Sans Condensed', sans-serif;
 }
 
+[data-bs-theme="dark"] {
+  --bs-body-bg: #1a1a2e;
+  --bs-body-bg-rgb: 26, 26, 46;
+}
+
 strong {
   font-weight: 700;
 }

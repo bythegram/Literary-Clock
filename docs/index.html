@@ -4,13 +4,29 @@
   <meta charset="utf-8">
   <title>Literary Clock</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1a1a2e">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1a2e" media="(prefers-color-scheme: dark)">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="LitClock">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
+  <script>
+    (function () {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      document.documentElement.setAttribute('data-bs-theme', mq.matches ? 'dark' : 'light');
+      if (mq.addEventListener) {
+        mq.addEventListener('change', function (e) {
+          document.documentElement.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
+        });
+      } else {
+        mq.addListener(function (e) {
+          document.documentElement.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
+        });
+      }
+    }());
+  </script>
   <link rel="stylesheet" href="bootstrap.min.css">
   <link rel="stylesheet" href="fonts.css">
   <link rel="stylesheet" href="style.css">
