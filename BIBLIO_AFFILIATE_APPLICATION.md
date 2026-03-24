@@ -147,9 +147,9 @@ the following technical changes are needed in this repository:
 2. **Re-run the script** against `docs/litclock.json` to refresh all existing
    `biblio_link` entries with affiliate URLs.
 
-3. **Add a disclosure notice** to `docs/index.html` and `README.md` stating that
-   some links are affiliate links, in compliance with FTC guidelines and
-   ShareASale's terms of service.
+3. **Publish the FTC disclosure notice** — fill in every `[TODO: …]` placeholder
+   in [`AFFILIATE_DISCLOSURE.md`](AFFILIATE_DISCLOSURE.md) and follow the
+   pre-activation checklist to add the notice to `docs/index.html` and `README.md`.
 
 4. **Test** a sample of generated links to confirm they resolve correctly and
    that the affiliate ID is recognised in the ShareASale dashboard.
