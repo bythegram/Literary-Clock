@@ -22,9 +22,14 @@ Literary-Clock/
 │   └── workflows/
 │       └── deploy.yml          # GitHub Actions: push docs/ to gh-pages on pushes to main + manual runs
 ├── docs/                       # ← The entire deployed application lives here
-│   ├── index.html              # App shell; loads Bootstrap 5 from CDN, Google Fonts, app.js
+│   ├── index.html              # App shell HTML; sets data-theme for dark mode, registers service worker
 │   ├── app.js                  # All clock logic (ES5 IIFE); no build or bundler
-│   ├── style.css               # Responsive styles; portrait/landscape, font-size scaling
+│   ├── style.css               # Custom CSS; CSS custom properties, dark mode, responsive layout
+│   ├── fonts.css               # @font-face declarations for self-hosted fonts
+│   ├── fonts/                  # Self-hosted font files (woff2) — Open Sans Condensed, Roboto Slab
+│   ├── sw.js                   # Service worker — caches assets for offline/PWA use
+│   ├── manifest.json           # Web App Manifest — enables PWA install
+│   ├── icons/                  # App icons (192px, 512px, apple-touch-icon)
 │   ├── litclock.json           # ← PRIMARY DATA SOURCE: 1,400+ time-tagged literary quotes
 │   └── favicon.ico
 ├── scripts/
@@ -43,8 +48,9 @@ Literary-Clock/
 | Layer | Technology | Notes |
 |---|---|---|
 | Language | Vanilla JavaScript **ES5** | The entire app is one IIFE in `docs/app.js` — no modules, no transpilation |
-| Styling | Bootstrap 5 (CDN) + custom CSS | Bootstrap loaded from jsDelivr CDN with SRI integrity hash |
-| Fonts | Google Fonts (CDN) | Open Sans Condensed 300 and Roboto Slab 300/700 |
+| Styling | Custom CSS (`docs/style.css`) | CSS custom properties (`--color-bg`, `--color-text`, etc.); dark mode via `[data-theme="dark"]` on `<html>` |
+| Fonts | Self-hosted Open Sans Condensed & Roboto Slab | Declared in `docs/fonts.css`; woff2 files in `docs/fonts/` — **no CDN dependency** |
+| Offline / PWA | Service worker + Web App Manifest | `docs/sw.js` caches all assets; `docs/manifest.json` enables PWA install |
 | Data | JSON | `docs/litclock.json` — edited directly, no compile step |
 | Dev server | `npx serve docs` | Run `npm start`; navigate to `http://localhost:3000/` |
 | Deployment | GitHub Actions → GitHub Pages | `.github/workflows/deploy.yml` |
@@ -256,7 +262,30 @@ Run `npm start`, open `http://localhost:3000/`, and manually set your system clo
 
 ---
 
-## 11. Coverage Tracking
+## 11. Documentation Update Requirement
+
+**Every pull request must review the documentation and update it where fitting.**
+
+Before opening or finalising any PR, check:
+
+- `README.md` — does it still accurately describe the tech stack, features, and project structure?
+- `ROADMAP.md` — if quotes were added, are the coverage table and missing-times list updated?
+- `.github/copilot-instructions.md` — if the codebase structure or conventions changed, are the instructions still accurate?
+
+Changes that **always** require a documentation update:
+
+| Change type | Documents to update |
+|---|---|
+| New file or directory added to `docs/` | `README.md` (Project Structure), `.github/copilot-instructions.md` (§2, §3) |
+| Dependency added or removed (CDN, npm, pip) | `README.md` (Technologies Used), `.github/copilot-instructions.md` (§3) |
+| New app feature (dark mode, PWA, etc.) | `README.md` (Features) |
+| New or changed helper script in `scripts/` | `README.md` (Helper Scripts), `.github/copilot-instructions.md` (§6) |
+| Quotes added to `litclock.json` | `ROADMAP.md` (coverage table + missing-times list) |
+| JS conventions changed | `.github/copilot-instructions.md` (§5) |
+
+---
+
+## 12. Coverage Tracking
 
 `ROADMAP.md` is the single source of truth for dataset coverage. Whenever a gap is filled:
 
@@ -269,7 +298,7 @@ Current overall coverage is ~90.9% (1,309 / 1,440 minutes covered). Priority hou
 
 ---
 
-## 12. Key Conventions Summary
+## 13. Key Conventions Summary
 
 | Topic | Convention |
 |---|---|
@@ -281,3 +310,4 @@ Current overall coverage is ~90.9% (1,309 / 1,440 minutes covered). Priority hou
 | New dependencies | Do not add npm/pip dependencies unless absolutely necessary |
 | PR scope | One focused batch of additions per pull request |
 | File locations | Never rename or move files inside `docs/` |
+| Documentation | **Every PR must review `README.md` and `ROADMAP.md` and update them if the changes affect the app structure, tech stack, features, or coverage data** |
