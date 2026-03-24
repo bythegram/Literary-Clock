@@ -48,7 +48,7 @@ Literary-Clock/
 | Layer | Technology | Notes |
 |---|---|---|
 | Language | Vanilla JavaScript **ES5** | The entire app is one IIFE in `docs/app.js` — no modules, no transpilation |
-| Styling | Custom CSS (`docs/style.css`) | CSS custom properties (`--color-bg`, `--color-text`, etc.); dark mode via `[data-theme="dark"]` on `<html>` |
+| Styling | Custom CSS (`docs/style.css`) | CSS custom properties (`--color-bg`, `--color-text`, `--font-size-quote`, etc.); dark mode via `[data-theme="dark"]` on `<html>` |
 | Fonts | Self-hosted Open Sans Condensed & Roboto Slab | Declared in `docs/fonts.css`; woff2 files in `docs/fonts/` — **no CDN dependency** |
 | Offline / PWA | Service worker + Web App Manifest | `docs/sw.js` caches all assets; `docs/manifest.json` enables PWA install |
 | Data | JSON | `docs/litclock.json` — edited directly, no compile step |
