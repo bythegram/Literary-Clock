@@ -6,6 +6,12 @@
   --font-quote: 'Roboto Slab', serif;
   --font-ui: 'Open Sans Condensed', sans-serif;
   --credit-height: 2.5rem; /* matches the fixed height set on .credit below */
+  /* Font sizes — override these to customise the clock without touching layout rules.
+     clamp(min, preferred, max): scales with the smaller viewport dimension so the
+     same value works correctly in both landscape (vmin ≈ vh) and portrait (vmin ≈ vw),
+     removing the need for a separate orientation media query. */
+  --font-size-quote:        clamp(1.5rem,  8vmin, 6rem);
+  --font-size-quote-smaller: clamp(1.25rem, 6vmin, 5rem);
 }
 
 [data-theme="dark"] {
@@ -62,14 +68,14 @@ strong {
 /* ── Quote Text ───────────────────────────────────────────────────────── */
 .quote-text {
   text-transform: uppercase;
-  font-size: 8vh;
+  font-size: var(--font-size-quote);
   line-height: 1.2;
   font-family: var(--font-quote);
   font-weight: 300;
 }
 
 .quote-text.smaller {
-  font-size: 6vh;
+  font-size: var(--font-size-quote-smaller);
 }
 
 /* ── Credit Footer ────────────────────────────────────────────────────── */
@@ -84,13 +90,3 @@ strong {
   padding: 0 1rem;
 }
 
-/* ── Portrait orientation ─────────────────────────────────────────────── */
-@media screen and (orientation: portrait) {
-  .quote-text {
-    font-size: 8vw;
-  }
-
-  .quote-text.smaller {
-    font-size: 6vw;
-  }
-}
