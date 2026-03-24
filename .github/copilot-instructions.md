@@ -276,12 +276,12 @@ Changes that **always** require a documentation update:
 
 | Change type | Documents to update |
 |---|---|
-| New file or directory added to `docs/` | `README.md` (Project Structure), `copilot-instructions.md` (§2, §3) |
-| Dependency added or removed (CDN, npm, pip) | `README.md` (Technologies Used), `copilot-instructions.md` (§3) |
+| New file or directory added to `docs/` | `README.md` (Project Structure), `.github/copilot-instructions.md` (§2, §3) |
+| Dependency added or removed (CDN, npm, pip) | `README.md` (Technologies Used), `.github/copilot-instructions.md` (§3) |
 | New app feature (dark mode, PWA, etc.) | `README.md` (Features) |
-| New or changed helper script in `scripts/` | `README.md` (Helper Scripts), `copilot-instructions.md` (§6) |
+| New or changed helper script in `scripts/` | `README.md` (Helper Scripts), `.github/copilot-instructions.md` (§6) |
 | Quotes added to `litclock.json` | `ROADMAP.md` (coverage table + missing-times list) |
-| JS conventions changed | `copilot-instructions.md` (§5) |
+| JS conventions changed | `.github/copilot-instructions.md` (§5) |
 
 ---
 
