@@ -1,29 +1,70 @@
-body {
-  font-size: 16px;
-  font-family: 'Open Sans Condensed', sans-serif;
+/* ── CSS Custom Properties (Theming) ──────────────────────────────────── */
+:root {
+  --color-bg: #ffffff;
+  --color-text: #212529;
+  --color-link: #0d6efd;
+  --font-quote: 'Roboto Slab', serif;
+  --font-ui: 'Open Sans Condensed', sans-serif;
+  --credit-height: 2.5rem; /* matches the fixed height set on .credit below */
 }
 
-[data-bs-theme="dark"] {
-  --bs-body-bg: #1a1a2e;
-  --bs-body-bg-rgb: 26, 26, 46;
+[data-theme="dark"] {
+  --color-bg: #1a1a2e;
+  --color-text: #e9ecef;
+  --color-link: #6ea8fe;
+}
+
+/* ── Reset ────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-size: 16px;
+  font-family: var(--font-ui);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--color-link);
 }
 
 strong {
   font-weight: 700;
 }
 
-.container-fluid {
-  height: 100vh;
+/* ── Layout ───────────────────────────────────────────────────────────── */
+.clock-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding-bottom: var(--credit-height);
 }
 
-.row {
-  height: 100%;
+.clock-content {
+  max-width: 100%;
+  max-height: calc(100vh - var(--credit-height)); /* cap content height so it never overlaps the fixed credit footer */
+  padding: 0 1rem;
 }
 
+.attribution {
+  text-align: right;
+}
+
+/* ── Quote Text ───────────────────────────────────────────────────────── */
 .quote-text {
+  text-transform: uppercase;
   font-size: 8vh;
   line-height: 1.2;
-  font-family: 'Roboto Slab', serif;
+  font-family: var(--font-quote);
   font-weight: 300;
 }
 
@@ -31,11 +72,19 @@ strong {
   font-size: 6vh;
 }
 
-.max-100 {
-  max-width: 100%;
-  max-height: 90%;
+/* ── Credit Footer ────────────────────────────────────────────────────── */
+.credit {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--credit-height);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
 }
 
+/* ── Portrait orientation ─────────────────────────────────────────────── */
 @media screen and (orientation: portrait) {
   .quote-text {
     font-size: 8vw;

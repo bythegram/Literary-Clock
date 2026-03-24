@@ -1,10 +1,9 @@
-var CACHE_NAME = 'literary-clock-v2';
+var CACHE_NAME = 'literary-clock-v3';
 var ASSETS = [
   './',
   './index.html',
   './app.js',
   './style.css',
-  './bootstrap.min.css',
   './fonts.css',
   './fonts/z7NFdQDnbTkabZAIOl9il_O6KJj73e7Ff1GhDujMR6WR.woff2',
   './fonts/z7NFdQDnbTkabZAIOl9il_O6KJj73e7Ff1GhDuHMR6WR.woff2',
