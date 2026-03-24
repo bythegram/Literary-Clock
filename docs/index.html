@@ -15,34 +15,31 @@
   <script>
     (function () {
       var mq = window.matchMedia('(prefers-color-scheme: dark)');
-      document.documentElement.setAttribute('data-bs-theme', mq.matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
       if (mq.addEventListener) {
         mq.addEventListener('change', function (e) {
-          document.documentElement.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
         });
       } else {
         mq.addListener(function (e) {
-          document.documentElement.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
         });
       }
     }());
   </script>
-  <link rel="stylesheet" href="bootstrap.min.css">
   <link rel="stylesheet" href="fonts.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container-fluid">
-    <div class="row justify-content-center align-items-center">
-      <div class="col-auto max-100">
-        <p id="quote" class="text-uppercase quote-text"></p>
-        <p class="text-end"><strong id="book"></strong><br><em id="author"></em></p>
-      </div>
-      <div class="col-12 align-self-end fixed-bottom">
-        <a href="https://bythegram.ca/blog/angular-literary-clock" target="_blank">Credit</a>
-      </div>
+  <main class="clock-container">
+    <div class="clock-content">
+      <p id="quote" class="quote-text"></p>
+      <p class="attribution"><strong id="book"></strong><br><em id="author"></em></p>
     </div>
-  </div>
+  </main>
+  <footer class="credit">
+    <a href="https://bythegram.ca/blog/angular-literary-clock" target="_blank">Credit</a>
+  </footer>
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
