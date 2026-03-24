@@ -13,7 +13,8 @@ A literary clock that displays the current time through quotations from famous n
 - Shows the book title and author for every passage
 - Responsive design — works on desktop, tablet, and mobile (portrait/landscape)
 - Quotes are shuffled on load so repeated visits show different passages for the same time
-- Apple mobile web app meta tags for a PWA-like experience on iOS
+- Dark mode — automatically follows the system colour-scheme preference
+- Installable as a Progressive Web App (PWA) — service worker caches all assets for offline use
 
 ---
 
@@ -22,8 +23,10 @@ A literary clock that displays the current time through quotations from famous n
 | Layer | Technology |
 |---|---|
 | Language | Vanilla JavaScript (ES5 IIFE) |
-| Styling | [Bootstrap 5](https://getbootstrap.com/) (CDN), CSS, Google Fonts |
+| Styling | Custom CSS (`style.css`) with CSS custom properties; dark mode via `data-theme` attribute |
+| Fonts | Self-hosted Open Sans Condensed and Roboto Slab (declared in `fonts.css`, files in `docs/fonts/`) |
 | Data | JSON |
+| Offline / PWA | Service worker (`sw.js`) caches all assets; Web App Manifest (`manifest.json`) |
 | Hosting | [GitHub Pages](https://pages.github.com/) |
 
 ---
@@ -35,7 +38,12 @@ Literary-Clock/
 ├── docs/                           # Deployed app — served directly by GitHub Pages
 │   ├── index.html                  # App shell HTML
 │   ├── app.js                      # Clock logic: shuffle, time-matching, DOM updates
-│   ├── style.css                   # Styles (responsive font sizing, portrait layout)
+│   ├── style.css                   # Styles (CSS custom properties, dark mode, responsive layout)
+│   ├── fonts.css                   # @font-face declarations for self-hosted fonts
+│   ├── fonts/                      # Self-hosted font files (woff2)
+│   ├── sw.js                       # Service worker — caches assets for offline/PWA use
+│   ├── manifest.json               # Web App Manifest — enables PWA install on mobile/desktop
+│   ├── icons/                      # App icons (192px, 512px, apple-touch-icon)
 │   ├── litclock.json               # Dataset: 1,400+ time-tagged literary quotes
 │   └── favicon.ico
 ├── scripts/
