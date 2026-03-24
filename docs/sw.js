@@ -1,4 +1,4 @@
-var CACHE_NAME = 'literary-clock-v3';
+var CACHE_NAME = 'literary-clock-v4';
 var ASSETS = [
   './',
   './index.html',
@@ -23,7 +23,9 @@ var ASSETS = [
   './favicon.ico',
   './manifest.json',
   './icons/icon-192.png',
+  './icons/icon-192-maskable.png',
   './icons/icon-512.png',
+  './icons/icon-512-maskable.png',
   './icons/apple-touch-icon.png'
 ];
 
