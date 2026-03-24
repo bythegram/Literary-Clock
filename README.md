@@ -43,7 +43,7 @@ Literary-Clock/
 │   ├── fonts/                      # Self-hosted font files (woff2)
 │   ├── sw.js                       # Service worker — caches assets for offline/PWA use
 │   ├── manifest.json               # Web App Manifest — enables PWA install on mobile/desktop
-│   ├── icons/                      # App icons (192px, 512px, apple-touch-icon)
+│   ├── icons/                      # App icons: icon-192.png, icon-512.png, icon-192-maskable.png, icon-512-maskable.png, apple-touch-icon.png
 │   ├── litclock.json               # Dataset: 1,400+ time-tagged literary quotes
 │   └── favicon.ico
 ├── scripts/
