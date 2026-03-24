@@ -66,13 +66,14 @@
       clockData = shuffleArray(data);
       updateDisplay(clockData);
 
-      var now = new Date();
-      var msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-      setTimeout(function () {
-        updateDisplay(clockData);
-        setInterval(function () {
+      function scheduleNextUpdate() {
+        var now = new Date();
+        var msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+        setTimeout(function () {
           updateDisplay(clockData);
-        }, 60000);
-      }, msToNextMinute);
+          scheduleNextUpdate();
+        }, msToNextMinute);
+      }
+      scheduleNextUpdate();
     });
 }());
