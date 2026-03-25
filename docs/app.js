@@ -177,25 +177,76 @@
       }(buttons[i]));
     }
 
-    // Clock auto-update: reschedule every minute
-    var minuteTimeoutId = null;
-
-    function scheduleNextUpdate() {
-      if (minuteTimeoutId !== null) {
-        clearTimeout(minuteTimeoutId);
-        minuteTimeoutId = null;
-      }
+    // ── Timing helpers ──────────────────────────────────────────────────
+    function msUntilNextMinute() {
       var now = new Date();
-      var msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-      minuteTimeoutId = setTimeout(function () {
-        minuteTimeoutId = null;
+      return (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+    }
+
+    function msUntilMidnight() {
+      var now = new Date();
+      var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      return midnight.getTime() - now.getTime();
+    }
+
+    function msUntilNextMonth() {
+      var now = new Date();
+      var firstOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+      return firstOfNextMonth.getTime() - now.getTime();
+    }
+
+    // ── Clock: refresh at each minute boundary ───────────────────────────
+    var clockTimeoutId = null;
+    function scheduleClockUpdate() {
+      if (clockTimeoutId !== null) {
+        clearTimeout(clockTimeoutId);
+        clockTimeoutId = null;
+      }
+      clockTimeoutId = setTimeout(function () {
+        clockTimeoutId = null;
         if (currentMode === 'clock') {
           renderQuoteResult(getTime(clockData));
         }
-        scheduleNextUpdate();
-      }, msToNextMinute);
+        scheduleClockUpdate();
+      }, msUntilNextMinute());
     }
-    scheduleNextUpdate();
+    scheduleClockUpdate();
+
+    // ── Day of Week + Date: refresh at midnight (new day) ────────────────
+    var dayTimeoutId = null;
+    function scheduleDayUpdate() {
+      if (dayTimeoutId !== null) {
+        clearTimeout(dayTimeoutId);
+        dayTimeoutId = null;
+      }
+      dayTimeoutId = setTimeout(function () {
+        dayTimeoutId = null;
+        if (currentMode === 'day') {
+          renderQuoteResult(getDayOfWeek(daysData));
+        } else if (currentMode === 'date') {
+          renderQuoteResult(getDate(datesData));
+        }
+        scheduleDayUpdate();
+      }, msUntilMidnight());
+    }
+    scheduleDayUpdate();
+
+    // ── Month: refresh at the start of the next month ────────────────────
+    var monthTimeoutId = null;
+    function scheduleMonthUpdate() {
+      if (monthTimeoutId !== null) {
+        clearTimeout(monthTimeoutId);
+        monthTimeoutId = null;
+      }
+      monthTimeoutId = setTimeout(function () {
+        monthTimeoutId = null;
+        if (currentMode === 'month') {
+          renderQuoteResult(getMonth(monthsData));
+        }
+        scheduleMonthUpdate();
+      }, msUntilNextMonth());
+    }
+    scheduleMonthUpdate();
   }
 
   fetch('litclock.json')
