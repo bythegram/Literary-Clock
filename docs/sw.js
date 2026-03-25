@@ -22,6 +22,9 @@ var ASSETS = [
   './fonts/BngMUXZYTXPIvIBgJJSb6ufD5qW54A.woff2',
   './fonts/BngMUXZYTXPIvIBgJJSb6ufN5qU.woff2',
   './litclock.json',
+  './litdays.json',
+  './litmonths.json',
+  './litdates.json',
   './favicon.ico',
   './manifest.json',
   './icons/icon-192.png',
@@ -56,9 +59,12 @@ self.addEventListener('activate', function (event) {
 self.addEventListener('fetch', function (event) {
   var url = new URL(event.request.url);
 
-  // Network-first for litclock.json so updates propagate immediately;
+  // Network-first for data JSON files so updates propagate immediately;
   // fall back to cache when offline.
-  if (url.pathname.endsWith('/litclock.json')) {
+  if (url.pathname.endsWith('/litclock.json') ||
+      url.pathname.endsWith('/litdays.json') ||
+      url.pathname.endsWith('/litmonths.json') ||
+      url.pathname.endsWith('/litdates.json')) {
     event.respondWith(
       fetch(event.request)
         .then(function (response) {
