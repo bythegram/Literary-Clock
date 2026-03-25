@@ -78,18 +78,9 @@
       clockData = shuffleArray(data);
       updateDisplay(clockData);
 
-      var fadeTimeoutId = null;
       var minuteTimeoutId = null;
 
       function scheduleNextUpdate() {
-        /* Clear any pending timers from the previous cycle.  Background-tab
-           timer throttling can delay and coalesce timeouts, so without this
-           a stale fade timer could add .fading after the minute has already
-           updated, causing an unexpected flash-out on the next cycle. */
-        if (fadeTimeoutId !== null) {
-          clearTimeout(fadeTimeoutId);
-          fadeTimeoutId = null;
-        }
         if (minuteTimeoutId !== null) {
           clearTimeout(minuteTimeoutId);
           minuteTimeoutId = null;
@@ -97,24 +88,17 @@
 
         var now = new Date();
         var msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-        var fadeDelay = msToNextMinute - 2000;
         var contentEl = document.getElementById('clock-content');
-
-        if (fadeDelay > 0) {
-          fadeTimeoutId = setTimeout(function () {
-            fadeTimeoutId = null;
-            contentEl.classList.add('fading');
-          }, fadeDelay);
-        }
 
         minuteTimeoutId = setTimeout(function () {
           minuteTimeoutId = null;
+          /* Snap to invisible at the minute boundary, update content, then
+             let the 60 s CSS transition fade the new content in over the
+             full minute.  The double-rAF technique forces a style
+             recalculation so the browser paints one frame at opacity:0
+             before removing .fading and starting the fade-in. */
+          contentEl.classList.add('fading');
           updateDisplay(clockData);
-          /* Two animation frames let the browser paint the new content at
-             opacity:0 (the .fading rule is still active on the container)
-             before we remove the class to trigger the CSS fade-in transition.
-             This is a standard double-rAF technique for forcing a style
-             recalculation between two paint frames. */
           requestAnimationFrame(function () {
             requestAnimationFrame(function () {
               contentEl.classList.remove('fading');
