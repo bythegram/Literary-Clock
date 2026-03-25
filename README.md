@@ -136,3 +136,31 @@ python3 scripts/add_public_domain.py --offline
 Inspiration and quotes sourced from:
 - [Literary Clock Made From E-reader](https://www.instructables.com/id/Literary-Clock-Made-From-E-reader/) (Instructables)
 - [The Guardian Literary Clock](https://www.theguardian.com/books/table/2011/apr/21/literary-clock)
+
+---
+
+## Affiliate Disclosure
+
+> ⚠️ **Placeholder — not yet active.**
+> This section will be replaced with the finalised disclosure text when the
+> Biblio.com affiliate program is approved and affiliate tracking links go live.
+> See [`AFFILIATE_DISCLOSURE.md`](AFFILIATE_DISCLOSURE.md) for the full template
+> and the pre-activation checklist.
+
+**[TODO: SITE_OWNER_LEGAL_NAME]** ("we", "us") operates Literary Clock at
+<https://bythegram.github.io/Literary-Clock/>.
+
+We participate in the **Biblio.com affiliate program**, managed through
+**[TODO: AFFILIATE_NETWORK — expected: ShareASale; confirm upon approval]**.
+When you click a "Find this book on Biblio" link and subsequently make a purchase
+on [Biblio.com](https://www.biblio.com/), we may earn an affiliate commission.
+**This commission comes at no additional cost to you.** The price you pay is the
+same whether or not you use our affiliate link.
+
+Our editorial choices — which quotes are included in the dataset and which books
+are linked — are made independently and are not influenced by this affiliate
+relationship.
+
+Questions? Contact us at **[TODO: CONTACT_EMAIL]**.
+
+*Effective: **[TODO: EFFECTIVE_DATE — insert the date affiliate links go live]**.*
