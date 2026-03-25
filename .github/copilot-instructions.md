@@ -22,8 +22,10 @@ Literary-Clock/
 │   └── workflows/
 │       └── deploy.yml          # GitHub Actions: push docs/ to gh-pages on pushes to main + manual runs
 ├── docs/                       # ← The entire deployed application lives here
-│   ├── index.html              # App shell HTML; sets data-theme for dark mode, registers service worker
+│   ├── index.html              # App shell HTML; sets data-theme for dark mode, enforces CSP
 │   ├── app.js                  # All clock logic (ES5 IIFE); no build or bundler
+│   ├── theme.js                # Dark/light theme detection — loaded before CSS in <head>
+│   ├── sw-register.js          # Service worker registration — loaded at end of <body>
 │   ├── style.css               # Custom CSS; CSS custom properties, dark mode, responsive layout
 │   ├── fonts.css               # @font-face declarations for self-hosted fonts
 │   ├── fonts/                  # Self-hosted font files (woff2) — Open Sans Condensed, Roboto Slab
@@ -51,6 +53,7 @@ Literary-Clock/
 | Styling | Custom CSS (`docs/style.css`) | CSS custom properties (`--color-bg`, `--color-text`, `--font-size-quote`, etc.); dark mode via `[data-theme="dark"]` on `<html>` |
 | Fonts | Self-hosted Open Sans Condensed & Roboto Slab | Declared in `docs/fonts.css`; woff2 files in `docs/fonts/` — **no CDN dependency** |
 | Offline / PWA | Service worker + Web App Manifest | `docs/sw.js` caches all assets; `docs/manifest.json` enables PWA install |
+| Security | Content Security Policy meta tag | `script-src 'self'`; no `unsafe-inline`, no `eval()`; no string-based `setTimeout`/`setInterval` |
 | Data | JSON | `docs/litclock.json` — edited directly, no compile step |
 | Dev server | `npx serve docs` | Run `npm start`; navigate to `http://localhost:3000/` |
 | Deployment | GitHub Actions → GitHub Pages | `.github/workflows/deploy.yml` |

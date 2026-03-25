@@ -15,6 +15,7 @@ A literary clock that displays the current time through quotations from famous n
 - Quotes are shuffled on load so repeated visits show different passages for the same time
 - Dark mode — automatically follows the system colour-scheme preference
 - Installable as a Progressive Web App (PWA) — service worker caches all assets for offline use
+- Content Security Policy (CSP) enforced via meta tag — no inline scripts, no `eval()`, no `unsafe-inline`
 
 ---
 
@@ -27,6 +28,7 @@ A literary clock that displays the current time through quotations from famous n
 | Fonts | Self-hosted Open Sans Condensed and Roboto Slab (declared in `fonts.css`, files in `docs/fonts/`) |
 | Data | JSON |
 | Offline / PWA | Service worker (`sw.js`) caches all assets; Web App Manifest (`manifest.json`) |
+| Security | `Content-Security-Policy` meta tag (`script-src 'self'`, no `unsafe-inline`) |
 | Hosting | [GitHub Pages](https://pages.github.com/) |
 
 ---
@@ -36,8 +38,10 @@ A literary clock that displays the current time through quotations from famous n
 ```
 Literary-Clock/
 ├── docs/                           # Deployed app — served directly by GitHub Pages
-│   ├── index.html                  # App shell HTML
+│   ├── index.html                  # App shell HTML (CSP meta tag, no inline scripts)
 │   ├── app.js                      # Clock logic: shuffle, time-matching, DOM updates
+│   ├── theme.js                    # Dark/light mode detection (loaded before CSS)
+│   ├── sw-register.js              # Service worker registration
 │   ├── style.css                   # Styles (CSS custom properties, dark mode, responsive layout)
 │   ├── fonts.css                   # @font-face declarations for self-hosted fonts
 │   ├── fonts/                      # Self-hosted font files (woff2)
