@@ -89,6 +89,7 @@
         var now = new Date();
         var msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
         var contentEl = document.getElementById('clock-content');
+        contentEl.classList.add('fading');
 
         minuteTimeoutId = setTimeout(function () {
           minuteTimeoutId = null;
@@ -97,7 +98,6 @@
              full minute.  The double-rAF technique forces a style
              recalculation so the browser paints one frame at opacity:0
              before removing .fading and starting the fade-in. */
-          contentEl.classList.add('fading');
           updateDisplay(clockData);
           requestAnimationFrame(function () {
             requestAnimationFrame(function () {
