@@ -70,6 +70,8 @@
     } else {
       quoteEl.classList.remove('smaller');
     }
+    
+    contentEl.classList.remove('fading');
   }
 
   fetch('litclock.json')
@@ -81,6 +83,7 @@
       var minuteTimeoutId = null;
 
       function scheduleNextUpdate() {
+        contentEl.classList.add('fading');
         if (minuteTimeoutId !== null) {
           clearTimeout(minuteTimeoutId);
           minuteTimeoutId = null;
@@ -89,21 +92,9 @@
         var now = new Date();
         var msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
         var contentEl = document.getElementById('clock-content');
-        contentEl.classList.add('fading');
-
         minuteTimeoutId = setTimeout(function () {
           minuteTimeoutId = null;
-          /* Snap to invisible at the minute boundary, update content, then
-             let the 60 s CSS transition fade the new content in over the
-             full minute.  The double-rAF technique forces a style
-             recalculation so the browser paints one frame at opacity:0
-             before removing .fading and starting the fade-in. */
           updateDisplay(clockData);
-          requestAnimationFrame(function () {
-            requestAnimationFrame(function () {
-              contentEl.classList.remove('fading');
-            });
-          });
           scheduleNextUpdate();
         }, msToNextMinute);
       }
