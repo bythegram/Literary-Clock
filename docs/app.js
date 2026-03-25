@@ -42,7 +42,7 @@
         biblio_link: item.biblio_link || null
       };
     }
-    return { quote: '<span class="fade-text">' + time + '</span>', rawLength: time.length, book: '', author: '', biblio_link: null };
+    return { quote: '<strong>' + time + '</strong>', rawLength: time.length, book: '', author: '', biblio_link: null };
   }
 
   function updateDisplay(data) {
@@ -78,22 +78,37 @@
       clockData = shuffleArray(data);
       updateDisplay(clockData);
 
+      var fadeTimeoutId = null;
+      var minuteTimeoutId = null;
+
       function scheduleNextUpdate() {
+        /* Clear any pending timers from the previous cycle.  Background-tab
+           timer throttling can delay and coalesce timeouts, so without this
+           a stale fade timer could add .fading after the minute has already
+           updated, causing an unexpected flash-out on the next cycle. */
+        if (fadeTimeoutId !== null) {
+          clearTimeout(fadeTimeoutId);
+          fadeTimeoutId = null;
+        }
+        if (minuteTimeoutId !== null) {
+          clearTimeout(minuteTimeoutId);
+          minuteTimeoutId = null;
+        }
+
         var now = new Date();
         var msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
         var fadeDelay = msToNextMinute - 2000;
         var contentEl = document.getElementById('clock-content');
 
-        /* The fade timer always fires before the minute-change timer
-           (fadeDelay < msToNextMinute), so by the time scheduleNextUpdate()
-           is called again there is no outstanding fade timer to clear. */
         if (fadeDelay > 0) {
-          setTimeout(function () {
+          fadeTimeoutId = setTimeout(function () {
+            fadeTimeoutId = null;
             contentEl.classList.add('fading');
           }, fadeDelay);
         }
 
-        setTimeout(function () {
+        minuteTimeoutId = setTimeout(function () {
+          minuteTimeoutId = null;
           updateDisplay(clockData);
           /* Two animation frames let the browser paint the new content at
              opacity:0 (the .fading rule is still active on the container)

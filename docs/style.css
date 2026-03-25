@@ -79,16 +79,18 @@ strong {
 }
 
 /* ── Minute-transition fade ─────────────────────────────────────────── */
-/* Non-bold quote text and the author line both fade out over 2 s when the
-   .fading class is present on the content wrapper, leaving only the
-   <strong>-wrapped time phrase visible at the minute boundary. */
+/* Non-bold quote text, the attribution author line, and the book title all
+   fade out over 2 s when .fading is present on the content wrapper, leaving
+   only the quote's <strong>-wrapped time phrase visible at the minute boundary. */
 .fade-text,
-.clock-content em {
+.clock-content em,
+.clock-content .attribution strong {
   transition: opacity 2s linear;
 }
 
 .clock-content.fading .fade-text,
-.clock-content.fading em {
+.clock-content.fading em,
+.clock-content.fading .attribution strong {
   opacity: 0;
 }
 
