@@ -1,5 +1,15 @@
 (function () {
   var clockData = [];
+  var daysData = [];
+  var monthsData = [];
+  var datesData = [];
+  var currentMode = 'clock';
+  var loadedCount = 0;
+  var TOTAL_FILES = 4;
+
+  var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+                     'July', 'August', 'September', 'October', 'November', 'December'];
 
   function shuffleArray(arr) {
     for (var i = arr.length - 1; i > 0; i--) {
@@ -9,6 +19,29 @@
       arr[j] = temp;
     }
     return arr;
+  }
+
+  function buildQuoteResult(item, fallbackLabel) {
+    var quote = item.quote.toLowerCase();
+    var label = (item.label || fallbackLabel || '').toLowerCase();
+    var idx = label ? quote.indexOf(label) : -1;
+    var quoteFinal;
+    if (idx !== -1) {
+      var before = quote.substring(0, idx);
+      var after = quote.substring(idx + label.length);
+      quoteFinal = (before ? '<span>' + before + '</span>' : '') +
+                   '<strong>' + label + '</strong>' +
+                   (after ? '<span>' + after + '</span>' : '');
+    } else {
+      quoteFinal = '<span>' + quote + '</span>';
+    }
+    return {
+      quote: quoteFinal,
+      rawLength: item.quote.length,
+      author: '-' + item.author,
+      book: item.book,
+      biblio_link: item.biblio_link || null
+    };
   }
 
   function getTime(data) {
@@ -21,32 +54,55 @@
     });
     var item = matches[0];
     if (item) {
-      var quote = item.quote.toLowerCase();
-      var label = item.label.toLowerCase();
-      var idx = quote.indexOf(label);
-      var quoteFinal;
-      if (idx !== -1) {
-        var before = quote.substring(0, idx);
-        var after = quote.substring(idx + label.length);
-        quoteFinal = (before ? '<span>' + before + '</span>' : '') +
-                     '<strong>' + label + '</strong>' +
-                     (after ? '<span>' + after + '</span>' : '');
-      } else {
-        quoteFinal = '<span>' + quote + '</span>';
-      }
-      return {
-        quote: quoteFinal,
-        rawLength: item.quote.length,
-        author: '-' + item.author,
-        book: item.book,
-        biblio_link: item.biblio_link || null
-      };
+      return buildQuoteResult(item, time);
     }
     return { quote: '<strong>' + time + '</strong>', rawLength: time.length, book: '', author: '', biblio_link: null };
   }
 
-  function updateDisplay(data) {
-    var litTime = getTime(data);
+  function getDayOfWeek(data) {
+    var dayName = DAY_NAMES[new Date().getDay()];
+    var matches = data.filter(function (item) {
+      return item.day === dayName;
+    });
+    var item = matches[0];
+    if (item) {
+      return buildQuoteResult(item, dayName.toLowerCase());
+    }
+    // Fallback: show day name as bold text
+    return { quote: '<strong>' + dayName.toLowerCase() + '</strong>', rawLength: dayName.length, book: '', author: '', biblio_link: null };
+  }
+
+  function getDate(data) {
+    var now = new Date();
+    var dateKey = (now.getMonth() + 1) + '/' + now.getDate();
+    var matches = data.filter(function (item) {
+      return item.date === dateKey;
+    });
+    var item = matches[0];
+    if (item) {
+      return buildQuoteResult(item, item.label);
+    }
+    // Fallback: show the date as bold text
+    var monthName = MONTH_NAMES[now.getMonth()];
+    var day = now.getDate();
+    var fallbackLabel = monthName.toLowerCase() + ' ' + day;
+    return { quote: '<strong>' + fallbackLabel + '</strong>', rawLength: fallbackLabel.length, book: '', author: '', biblio_link: null };
+  }
+
+  function getMonth(data) {
+    var monthName = MONTH_NAMES[new Date().getMonth()];
+    var matches = data.filter(function (item) {
+      return item.month === monthName;
+    });
+    var item = matches[0];
+    if (item) {
+      return buildQuoteResult(item, monthName.toLowerCase());
+    }
+    // Fallback: show month name as bold text
+    return { quote: '<strong>' + monthName.toLowerCase() + '</strong>', rawLength: monthName.length, book: '', author: '', biblio_link: null };
+  }
+
+  function renderQuoteResult(litTime) {
     var quoteEl = document.getElementById('quote');
     var bookEl = document.getElementById('book');
     var authorEl = document.getElementById('author');
@@ -72,28 +128,89 @@
     }
   }
 
+  function showMode(mode) {
+    var clockContent = document.getElementById('clock-content');
+    var infoPanel = document.getElementById('info-panel');
+
+    if (mode === 'info') {
+      clockContent.hidden = true;
+      infoPanel.hidden = false;
+    } else {
+      clockContent.hidden = false;
+      infoPanel.hidden = true;
+      if (mode === 'clock') {
+        renderQuoteResult(getTime(clockData));
+      } else if (mode === 'day') {
+        renderQuoteResult(getDayOfWeek(daysData));
+      } else if (mode === 'date') {
+        renderQuoteResult(getDate(datesData));
+      } else if (mode === 'month') {
+        renderQuoteResult(getMonth(monthsData));
+      }
+    }
+  }
+
+  function updateDisplay() {
+    showMode(currentMode);
+  }
+
+  function onAllLoaded() {
+    loadedCount++;
+    if (loadedCount < TOTAL_FILES) { return; }
+
+    clockData = shuffleArray(clockData);
+
+    updateDisplay();
+
+    // Wire up nav buttons
+    var buttons = document.querySelectorAll('.mode-btn');
+    for (var i = 0; i < buttons.length; i++) {
+      (function (btn) {
+        btn.addEventListener('click', function () {
+          currentMode = btn.getAttribute('data-mode');
+          for (var k = 0; k < buttons.length; k++) {
+            buttons[k].classList.remove('active');
+          }
+          btn.classList.add('active');
+          showMode(currentMode);
+        });
+      }(buttons[i]));
+    }
+
+    // Clock auto-update: reschedule every minute
+    var minuteTimeoutId = null;
+
+    function scheduleNextUpdate() {
+      if (minuteTimeoutId !== null) {
+        clearTimeout(minuteTimeoutId);
+        minuteTimeoutId = null;
+      }
+      var now = new Date();
+      var msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+      minuteTimeoutId = setTimeout(function () {
+        minuteTimeoutId = null;
+        if (currentMode === 'clock') {
+          renderQuoteResult(getTime(clockData));
+        }
+        scheduleNextUpdate();
+      }, msToNextMinute);
+    }
+    scheduleNextUpdate();
+  }
+
   fetch('litclock.json')
     .then(function (res) { return res.json(); })
-    .then(function (data) {
-      clockData = shuffleArray(data);
-      updateDisplay(clockData);
+    .then(function (data) { clockData = data; onAllLoaded(); });
 
-      var minuteTimeoutId = null;
+  fetch('litdays.json')
+    .then(function (res) { return res.json(); })
+    .then(function (data) { daysData = data; onAllLoaded(); });
 
-      function scheduleNextUpdate() {
-        if (minuteTimeoutId !== null) {
-          clearTimeout(minuteTimeoutId);
-          minuteTimeoutId = null;
-        }
+  fetch('litmonths.json')
+    .then(function (res) { return res.json(); })
+    .then(function (data) { monthsData = data; onAllLoaded(); });
 
-        var now = new Date();
-        var msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-        minuteTimeoutId = setTimeout(function () {
-          minuteTimeoutId = null;
-          updateDisplay(clockData);
-          scheduleNextUpdate();
-        }, msToNextMinute);
-      }
-      scheduleNextUpdate();
-    });
+  fetch('litdates.json')
+    .then(function (res) { return res.json(); })
+    .then(function (data) { datesData = data; onAllLoaded(); });
 }());
