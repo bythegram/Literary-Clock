@@ -247,6 +247,19 @@
       }, msUntilNextMonth());
     }
     scheduleMonthUpdate();
+
+    // ── Page Visibility API: re-sync when the tab becomes visible ────────
+    // Browsers throttle background timers and device sleep skips them
+    // entirely. Re-render and reschedule all chains on visibility restore
+    // so the display is never stale when the user returns to the tab.
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') {
+        showMode(currentMode);
+        scheduleClockUpdate();
+        scheduleDayUpdate();
+        scheduleMonthUpdate();
+      }
+    });
   }
 
   fetch('litclock.json')
