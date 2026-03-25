@@ -19,6 +19,7 @@ A literary clock that displays the current time — and calendar context — thr
 - Quotes are shuffled on load so repeated visits show different passages for the same time/day
 - Dark mode — automatically follows the system colour-scheme preference
 - Installable as a Progressive Web App (PWA) — service worker caches all assets for offline use
+- Content Security Policy (CSP) enforced via meta tag — no inline scripts, no `eval()`, no `unsafe-inline`
 - Page Visibility API integration — re-renders and re-anchors all timers when a backgrounded tab becomes visible, preventing stale content after device sleep or tab switching
 
 ---
@@ -32,6 +33,7 @@ A literary clock that displays the current time — and calendar context — thr
 | Fonts | Self-hosted Open Sans Condensed and Roboto Slab (declared in `fonts.css`, files in `docs/fonts/`) |
 | Data | JSON |
 | Offline / PWA | Service worker (`sw.js`) caches all assets; Web App Manifest (`manifest.json`) |
+| Security | `Content-Security-Policy` meta tag (`script-src 'self'`, no `unsafe-inline`) |
 | Hosting | [GitHub Pages](https://pages.github.com/) |
 
 ---
@@ -41,8 +43,10 @@ A literary clock that displays the current time — and calendar context — thr
 ```
 Literary-Clock/
 ├── docs/                           # Deployed app — served directly by GitHub Pages
-│   ├── index.html                  # App shell HTML; mode toggle nav bar
+│   ├── index.html                  # App shell HTML (CSP meta tag, no inline scripts)
 │   ├── app.js                      # All app logic: shuffle, time-matching, mode switching, DOM updates
+│   ├── theme.js                    # Dark/light mode detection (loaded before CSS)
+│   ├── sw-register.js              # Service worker registration
 │   ├── style.css                   # Styles (CSS custom properties, dark mode, responsive layout, nav bar)
 │   ├── fonts.css                   # @font-face declarations for self-hosted fonts
 │   ├── fonts/                      # Self-hosted font files (woff2)

@@ -3,6 +3,8 @@ var ASSETS = [
   './',
   './index.html',
   './app.js',
+  './theme.js',
+  './sw-register.js',
   './style.css',
   './fonts.css',
   './fonts/z7NFdQDnbTkabZAIOl9il_O6KJj73e7Ff1GhDujMR6WR.woff2',
