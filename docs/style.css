@@ -3,6 +3,7 @@
   --color-bg: #ffffff;
   --color-text: #212529;
   --color-link: #0d6efd;
+  --color-bg-nav: rgba(255, 255, 255, 0.85);
   --font-quote: 'Roboto Slab', serif;
   --font-ui: 'Open Sans Condensed', sans-serif;
   --credit-height: 2.5rem; /* matches the fixed height set on .nav-bar below */
@@ -18,6 +19,7 @@
   --color-bg: #1a1a2e;
   --color-text: #e9ecef;
   --color-link: #6ea8fe;
+  --color-bg-nav: rgba(26, 26, 46, 0.85);
 }
 
 /* ── Reset ────────────────────────────────────────────────────────────── */
@@ -118,9 +120,8 @@ strong {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-bg);
+  background-color: var(--color-bg-nav);
   border-top: 1px solid currentColor;
-  opacity: 0.85;
   padding: 0 0.5rem;
 }
 

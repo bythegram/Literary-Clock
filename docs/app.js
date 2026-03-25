@@ -170,8 +170,10 @@
           currentMode = btn.getAttribute('data-mode');
           for (var k = 0; k < buttons.length; k++) {
             buttons[k].classList.remove('active');
+            buttons[k].setAttribute('aria-pressed', 'false');
           }
           btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
           showMode(currentMode);
         });
       }(buttons[i]));
@@ -263,18 +265,38 @@
   }
 
   fetch('litclock.json')
-    .then(function (res) { return res.json(); })
-    .then(function (data) { clockData = data; onAllLoaded(); });
+    .then(function (res) {
+      if (!res.ok) { throw new Error('Failed to load litclock.json: ' + res.status); }
+      return res.json();
+    })
+    .then(function (data) { clockData = data; })
+    .catch(function (err) { if (typeof console !== 'undefined' && console.error) { console.error(err); } })
+    .then(function () { onAllLoaded(); });
 
   fetch('litdays.json')
-    .then(function (res) { return res.json(); })
-    .then(function (data) { daysData = data; onAllLoaded(); });
+    .then(function (res) {
+      if (!res.ok) { throw new Error('Failed to load litdays.json: ' + res.status); }
+      return res.json();
+    })
+    .then(function (data) { daysData = data; })
+    .catch(function (err) { if (typeof console !== 'undefined' && console.error) { console.error(err); } })
+    .then(function () { onAllLoaded(); });
 
   fetch('litmonths.json')
-    .then(function (res) { return res.json(); })
-    .then(function (data) { monthsData = data; onAllLoaded(); });
+    .then(function (res) {
+      if (!res.ok) { throw new Error('Failed to load litmonths.json: ' + res.status); }
+      return res.json();
+    })
+    .then(function (data) { monthsData = data; })
+    .catch(function (err) { if (typeof console !== 'undefined' && console.error) { console.error(err); } })
+    .then(function () { onAllLoaded(); });
 
   fetch('litdates.json')
-    .then(function (res) { return res.json(); })
-    .then(function (data) { datesData = data; onAllLoaded(); });
+    .then(function (res) {
+      if (!res.ok) { throw new Error('Failed to load litdates.json: ' + res.status); }
+      return res.json();
+    })
+    .then(function (data) { datesData = data; })
+    .catch(function (err) { if (typeof console !== 'undefined' && console.error) { console.error(err); } })
+    .then(function () { onAllLoaded(); });
 }());

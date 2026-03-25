@@ -86,7 +86,7 @@ def biblio_link_search(title: str, author: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Add isbn / biblio_link fields to docs/litclock.json"
+        description="Add isbn / biblio_link fields to a Literary Clock JSON dataset (default: docs/litclock.json)"
     )
     parser.add_argument(
         "--file",
