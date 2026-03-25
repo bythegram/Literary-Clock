@@ -83,15 +83,11 @@ strong {
    content is rendered, then .fading is removed to start a 60 s fade-in.
    Only the non-bold portions (non-time-phrase text, attribution) participate
    so the <strong>-wrapped time phrase is always fully visible. */
-.fade-text,
-.clock-content em,
-.clock-content .attribution strong {
+.clock-content {
   transition: opacity 60s linear;
 }
 
-.clock-content.fading .fade-text,
-.clock-content.fading em,
-.clock-content.fading .attribution strong {
+.clock-content.fading {
   opacity: 0;
 }
 
