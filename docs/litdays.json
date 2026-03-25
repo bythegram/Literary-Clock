@@ -4,48 +4,55 @@
     "label": "sunday",
     "quote": "Garth here. Sunday afternoon. Sorry to miss you but I'll leave a brief message on your tape. Two-twenty P.M. Give me a call when you get in.",
     "book": "Larry's Party",
-    "author": "Carol Shields"
+    "author": "Carol Shields",
+    "biblio_link": "https://www.biblio.com/search.php?title=Larry%27s+Party&author=Carol+Shields"
   },
   {
     "day": "Monday",
     "label": "monday",
     "quote": "Monday February 6th. '9.36am. Oh god Oh god. Maybe he's fallen in love in New York and stayed there'.",
     "book": "Bridget Jones Diary",
-    "author": "Helen Fielding"
+    "author": "Helen Fielding",
+    "biblio_link": "https://www.biblio.com/search.php?title=Bridget+Jones+Diary&author=Helen+Fielding"
   },
   {
     "day": "Tuesday",
     "label": "tuesday",
     "quote": "Message one. Tuesday 8.52am. Is anybody there? Hello?",
     "book": "Extremely Loud and Incredibly Close",
-    "author": "Jonathan Safran Foer"
+    "author": "Jonathan Safran Foer",
+    "biblio_link": "https://www.biblio.com/search.php?title=Extremely+Loud+and+Incredibly+Close&author=Jonathan+Safran+Foer"
   },
   {
     "day": "Wednesday",
     "label": "wednesday",
     "quote": "At three on the Wednesday afternoon that bit of the painting was completed.",
     "book": "The Moonstone",
-    "author": "Wilkie Collins"
+    "author": "Wilkie Collins",
+    "biblio_link": "https://www.biblio.com/search.php?title=The+Moonstone&author=Wilkie+Collins"
   },
   {
     "day": "Thursday",
     "label": "thursday",
     "quote": "At 8 o'clock on Thursday morning Arthur didn't feel very good.",
     "book": "Hitch-Hikers Guide to the Galaxy",
-    "author": "Douglas Adams"
+    "author": "Douglas Adams",
+    "biblio_link": "https://www.biblio.com/search.php?title=Hitch-Hikers+Guide+to+the+Galaxy&author=Douglas+Adams"
   },
   {
     "day": "Friday",
     "label": "friday",
     "quote": "On Friday noon July the twentieth 1714 the finest bridge in all Peru broke and precipitated five travellers into the gulf below.",
     "book": "The Bridge of San Luis Rey",
-    "author": "Thornton Wilder"
+    "author": "Thornton Wilder",
+    "biblio_link": "https://www.biblio.com/search.php?title=The+Bridge+of+San+Luis+Rey&author=Thornton+Wilder"
   },
   {
     "day": "Saturday",
     "label": "saturday",
     "quote": "I opened the sunroof and turned up the CD player volume to combat fatigue and at 7.19am on Saturday the twenty-sixth of February the GPS told me I had arrived.",
     "book": "The Rosie Project",
-    "author": "Graeme Simsion"
+    "author": "Graeme Simsion",
+    "biblio_link": "https://www.biblio.com/search.php?title=The+Rosie+Project&author=Graeme+Simsion"
   }
 ]
