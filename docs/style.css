@@ -83,14 +83,31 @@ strong {
    content is rendered, then .fading is removed to start a 60 s fade-in.
    Only the non-bold portions (non-time-phrase text, attribution) participate
    so the <strong>-wrapped time phrase is always fully visible. */
-.clock-content {
-  transition: opacity 60s linear;
+.clock-content.fading .quote-text span {
+  -webkit-animation: fadeOut 60s;
+  -moz-animation: fadeOut 60s;
+  -o-animation: fadeOut 60s;
+  animation: fadeOut 60s;
 }
-
-.clock-content.fading {
-  opacity: 0;
+.clock-content.fading .quote-text strong {
+  opacity: 1;
 }
-
+@-webkit-keyframes fadeOut {
+  0% { opacity: 1;}
+  100% { opacity: 0; }
+}
+@-moz-keyframes fadeOut {
+  0% { opacity: 1;}
+  100% { opacity: 0; }
+}
+@-o-keyframes fadeOut {
+  0% { opacity: 1;}
+  100% { opacity: 0; }
+}
+@keyframes fadeOut {
+  0% { opacity: 1;}
+  100% { opacity: 0; }
+}
 /* ── Credit Footer ────────────────────────────────────────────────────── */
 .credit {
   position: fixed;

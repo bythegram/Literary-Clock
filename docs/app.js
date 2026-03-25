@@ -28,11 +28,11 @@
       if (idx !== -1) {
         var before = quote.substring(0, idx);
         var after = quote.substring(idx + label.length);
-        quoteFinal = (before ? '<span class="fade-text">' + before + '</span>' : '') +
+        quoteFinal = (before ? '<span>' + before + '</span>' : '') +
                      '<strong>' + label + '</strong>' +
-                     (after ? '<span class="fade-text">' + after + '</span>' : '');
+                     (after ? '<span>' + after + '</span>' : '');
       } else {
-        quoteFinal = '<span class="fade-text">' + quote + '</span>';
+        quoteFinal = '<span>' + quote + '</span>';
       }
       return {
         quote: quoteFinal,
@@ -70,8 +70,6 @@
     } else {
       quoteEl.classList.remove('smaller');
     }
-    
-    contentEl.classList.remove('fading');
   }
 
   fetch('litclock.json')
@@ -83,7 +81,6 @@
       var minuteTimeoutId = null;
 
       function scheduleNextUpdate() {
-        contentEl.classList.add('fading');
         if (minuteTimeoutId !== null) {
           clearTimeout(minuteTimeoutId);
           minuteTimeoutId = null;
@@ -91,7 +88,6 @@
 
         var now = new Date();
         var msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-        var contentEl = document.getElementById('clock-content');
         minuteTimeoutId = setTimeout(function () {
           minuteTimeoutId = null;
           updateDisplay(clockData);
