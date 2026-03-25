@@ -36,9 +36,19 @@
       <p id="quote" class="quote-text"></p>
       <p class="attribution"><strong id="book"></strong><br><em id="author"></em></p>
     </div>
+    <div id="info-panel" class="info-panel" hidden>
+      <p class="info-text">Literary Clock &mdash; a collection of time&hyphen;tagged quotes from world literature.</p>
+      <p class="info-text"><a href="https://bythegram.ca/blog/angular-literary-clock" target="_blank" rel="noopener noreferrer">About this project</a></p>
+    </div>
   </main>
-  <footer class="credit">
-    <a href="https://bythegram.ca/blog/angular-literary-clock" target="_blank" rel="noopener noreferrer">Credit</a>
+  <footer class="nav-bar">
+    <nav class="mode-nav" aria-label="Display mode">
+      <button class="mode-btn active" data-mode="clock" aria-pressed="true">Clock</button>
+      <button class="mode-btn" data-mode="day" aria-pressed="false">Day of Week</button>
+      <button class="mode-btn" data-mode="date" aria-pressed="false">Date</button>
+      <button class="mode-btn" data-mode="month" aria-pressed="false">Month</button>
+      <button class="mode-btn" data-mode="info" aria-pressed="false">Info</button>
+    </nav>
   </footer>
   <script src="app.js"></script>
   <script>

@@ -2,19 +2,24 @@
 
 **[Live Demo](https://bythegram.github.io/Literary-Clock/)**
 
-A literary clock that displays the current time through quotations from famous novels and literary works. Instead of showing a traditional clock face, it finds a passage from literature where the time mentioned matches the current real-world time — updated every minute.
+A literary clock that displays the current time — and calendar context — through quotations from famous novels and literary works. Instead of showing a traditional clock face, it finds a passage from literature that matches the current time, day of the week, calendar date, or month. The display updates automatically and can be toggled between modes via a navigation bar.
 
 ---
 
 ## Features
 
-- Displays the current time as a literary quote from a curated collection of over 1,400 passages
-- Highlights the time-referencing phrase within each quote
-- Shows the book title and author for every passage
+- **Clock mode** — displays the current time as a literary quote, updated every minute
+- **Day of Week mode** — displays a literary passage for the current day of the week, refreshed at midnight
+- **Date mode** — displays a literary passage for today's calendar date (`month/day`), refreshed at midnight
+- **Month mode** — displays a literary passage for the current month, refreshed at the first instant of the next month
+- Mode toggle bar at the bottom of the page: **Clock | Day of Week | Date | Month | Info**
+- Highlights the key time/date phrase within each quote using `<strong>` tags
+- Shows the book title and author for every passage; links to Biblio.com when available
 - Responsive design — works on desktop, tablet, and mobile (portrait/landscape)
-- Quotes are shuffled on load so repeated visits show different passages for the same time
+- Quotes are shuffled on load so repeated visits show different passages for the same time/day
 - Dark mode — automatically follows the system colour-scheme preference
 - Installable as a Progressive Web App (PWA) — service worker caches all assets for offline use
+- Page Visibility API integration — re-renders and re-anchors all timers when a backgrounded tab becomes visible, preventing stale content after device sleep or tab switching
 
 ---
 
@@ -36,18 +41,21 @@ A literary clock that displays the current time through quotations from famous n
 ```
 Literary-Clock/
 ├── docs/                           # Deployed app — served directly by GitHub Pages
-│   ├── index.html                  # App shell HTML
-│   ├── app.js                      # Clock logic: shuffle, time-matching, DOM updates
-│   ├── style.css                   # Styles (CSS custom properties, dark mode, responsive layout)
+│   ├── index.html                  # App shell HTML; mode toggle nav bar
+│   ├── app.js                      # All app logic: shuffle, time-matching, mode switching, DOM updates
+│   ├── style.css                   # Styles (CSS custom properties, dark mode, responsive layout, nav bar)
 │   ├── fonts.css                   # @font-face declarations for self-hosted fonts
 │   ├── fonts/                      # Self-hosted font files (woff2)
-│   ├── sw.js                       # Service worker — caches assets for offline/PWA use
+│   ├── sw.js                       # Service worker — caches all assets for offline/PWA use
 │   ├── manifest.json               # Web App Manifest — enables PWA install on mobile/desktop
 │   ├── icons/                      # App icons: icon-192.png, icon-512.png, icon-192-maskable.png, icon-512-maskable.png, apple-touch-icon.png
-│   ├── litclock.json               # Dataset: 1,400+ time-tagged literary quotes
+│   ├── litclock.json               # Dataset: 1,400+ time-tagged literary quotes (Clock mode)
+│   ├── litdays.json                # Dataset: literary quotes for each day of the week (Day of Week mode)
+│   ├── litmonths.json              # Dataset: literary quotes for each month (Month mode)
+│   ├── litdates.json               # Dataset: literary quotes for specific calendar dates (Date mode)
 │   └── favicon.ico
 ├── scripts/
-│   ├── add_biblio_links.py         # Populates isbn and biblio_link fields in litclock.json
+│   ├── add_biblio_links.py         # Populates isbn and biblio_link fields; supports --file to target any dataset
 │   └── add_public_domain.py        # Populates public_domain field via Open Library API
 ├── package.json                    # Dev dependency for local server (npx serve)
 ├── README.md
@@ -82,16 +90,28 @@ Navigate to `http://localhost:3000/`. The app is served from the `docs/` directo
 
 ## How It Works
 
+### Clock mode
 1. On load, `shuffleArray()` randomises the quote dataset so multiple quotes for the same minute appear in a random order across visits.
-2. `getTime()` reads the current hour and zero-padded minute, filters the dataset for matching `timecode` entries, and returns the first result (which is random due to the shuffle).
-3. The matched quote's time-label string is wrapped in `<strong>` tags for visual emphasis.
-4. A `setTimeout` fires at the next wall-clock minute boundary (computed as `(60 - seconds) * 1000 - milliseconds`), then a regular 60-second `setInterval` takes over. This ensures the quote always updates within a second of the minute changing, regardless of when the app was opened.
+2. `getTime()` reads the current hour and zero-padded minute, filters `litclock.json` for matching `timecode` entries, and returns the first result (random due to the shuffle).
+3. A `setTimeout` fires at the next wall-clock minute boundary (computed as `(60 - seconds) * 1000 - milliseconds`), then reschedules itself. This ensures the quote always updates within a second of the minute changing.
+
+### Calendar modes
+- **Day of Week** (`litdays.json`) — matches entries by `day` field against `Date.getDay()`; `setTimeout` re-anchors to the next midnight.
+- **Date** (`litdates.json`) — matches entries by `date` field (`"M/D"` format) against `getMonth()+1 + '/' + getDate()`; `setTimeout` re-anchors to the next midnight.
+- **Month** (`litmonths.json`) — matches entries by `month` field against `Date.getMonth()`; `setTimeout` re-anchors to the first instant of the next month.
+
+Each mode has its own independent `setTimeout` chain; a midnight tick for the Day/Date scheduler never disturbs the Clock display.
+
+### Page Visibility API
+A `visibilitychange` listener triggers whenever the tab becomes visible. It immediately re-renders the current mode and reschedules all three timer chains anchored to *now*, preventing stale content after browser timer throttling, device sleep, or leaving the tab open overnight.
 
 ---
 
 ## Adding Quotes
 
-The quote data lives in `docs/litclock.json`. Each entry must conform to the following schema:
+### Clock quotes (`docs/litclock.json`)
+
+Each entry must conform to the following schema:
 
 ```json
 {
@@ -116,11 +136,42 @@ The quote data lives in `docs/litclock.json`. Each entry must conform to the fol
 
 The `isbn`, `biblio_link`, and `public_domain` fields are optional in new entries — they are populated automatically by the helper scripts described below.
 
+### Calendar quotes
+
+The three calendar datasets share the same `label`, `quote`, `book`, `author`, `isbn`, and `biblio_link` fields as `litclock.json`, plus a mode-specific key field:
+
+| File | Key field | Values |
+|---|---|---|
+| `docs/litdays.json` | `day` | `"Sunday"` … `"Saturday"` |
+| `docs/litdates.json` | `date` | `"M/D"` format, e.g. `"3/25"` |
+| `docs/litmonths.json` | `month` | `"January"` … `"December"` |
+
+Example `litdays.json` entry:
+```json
+{
+  "day": "Wednesday",
+  "label": "wednesday",
+  "quote": "At three on the Wednesday afternoon that bit of the painting was completed.",
+  "book": "The Moonstone",
+  "author": "Wilkie Collins",
+  "biblio_link": "https://www.biblio.com/search.php?title=The+Moonstone&author=Wilkie+Collins"
+}
+```
+
 ### Helper Scripts
 
 ```bash
-# Populate isbn and biblio_link for entries that are missing them
+# Populate isbn and biblio_link for entries in litclock.json (default)
 python3 scripts/add_biblio_links.py
+
+# Populate isbn and biblio_link for a calendar dataset file
+python3 scripts/add_biblio_links.py --file docs/litdays.json
+python3 scripts/add_biblio_links.py --file docs/litmonths.json
+python3 scripts/add_biblio_links.py --file docs/litdates.json
+
+# Run offline (skip Open Library API; write title/author search URLs only)
+python3 scripts/add_biblio_links.py --offline
+python3 scripts/add_biblio_links.py --offline --file docs/litdays.json
 
 # Populate public_domain for entries that are missing it (requires internet)
 python3 scripts/add_public_domain.py

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Populate isbn and biblio_link fields in docs/litclock.json.
+"""Populate isbn and biblio_link fields in docs/litclock.json (default) or any
+other JSON file in docs/ that shares the same entry schema.
 
 The script processes every entry that is missing ``isbn``, ``biblio_link``,
 or both, according to the following rules:
@@ -24,6 +25,9 @@ Usage
   # Offline run – skip API calls, write title/author search URLs for every
   # entry that lacks a biblio_link (useful when no internet is available)
   python3 scripts/add_biblio_links.py --offline
+
+  # Process a different data file (e.g. litdays.json or litmonths.json)
+  python3 scripts/add_biblio_links.py --offline --file docs/litdays.json
 
   # Limit – process only the first N unique (book, author) pairs
   python3 scripts/add_biblio_links.py --limit 10
@@ -82,7 +86,14 @@ def biblio_link_search(title: str, author: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Add isbn / biblio_link fields to docs/litclock.json"
+        description="Add isbn / biblio_link fields to a Literary Clock JSON dataset (default: docs/litclock.json)"
+    )
+    parser.add_argument(
+        "--file",
+        type=Path,
+        default=LITCLOCK_JSON,
+        metavar="PATH",
+        help="Path to the JSON data file to process (default: docs/litclock.json)",
     )
     parser.add_argument(
         "--offline",
@@ -97,8 +108,9 @@ def main() -> None:
         help="Process at most N unique (book, author) pairs (0 = no limit)",
     )
     args = parser.parse_args()
+    target_file = args.file.resolve()
 
-    with open(LITCLOCK_JSON, encoding="utf-8") as fh:
+    with open(target_file, encoding="utf-8") as fh:
         entries = json.load(fh)
 
     # ------------------------------------------------------------------
@@ -171,13 +183,13 @@ def main() -> None:
 
     print(f"\nUpdated : {updated} entries")
 
-    tmp_path = LITCLOCK_JSON.with_suffix(LITCLOCK_JSON.suffix + ".tmp")
+    tmp_path = target_file.with_suffix(target_file.suffix + ".tmp")
     with tmp_path.open("w", encoding="utf-8") as fh:
         json.dump(entries, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
-    tmp_path.replace(LITCLOCK_JSON)
+    tmp_path.replace(target_file)
 
-    print(f"Saved   : {LITCLOCK_JSON}")
+    print(f"Saved   : {target_file}")
 
 
 if __name__ == "__main__":

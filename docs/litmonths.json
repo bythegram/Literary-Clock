@@ -1,0 +1,98 @@
+[
+  {
+    "month": "January",
+    "label": "january",
+    "quote": "It's 4:03 a.m. on a supremely cold January morning and I'm just getting home. I've been out dancing and I'm only half drunk but utterly exhausted.",
+    "book": "The Time Traveler's Wife",
+    "author": "Audrey Niffenegger",
+    "biblio_link": "https://www.biblio.com/search.php?title=The+Time+Traveler%27s+Wife&author=Audrey+Niffenegger"
+  },
+  {
+    "month": "February",
+    "label": "february",
+    "quote": "Monday February 6th. '9.36am. Oh god Oh god. Maybe he's fallen in love in New York and stayed there'.",
+    "book": "Bridget Jones Diary",
+    "author": "Helen Fielding",
+    "biblio_link": "https://www.biblio.com/search.php?title=Bridget+Jones+Diary&author=Helen+Fielding"
+  },
+  {
+    "month": "March",
+    "label": "march",
+    "quote": "Monday 30 March 1668 Up betimes and so to the office there to do business till about 10 o'clock.",
+    "book": "The Diary of Samuel Pepys",
+    "author": "Samuel Pepys",
+    "biblio_link": "https://www.biblio.com/search.php?title=The+Diary+of+Samuel+Pepys&author=Samuel+Pepys"
+  },
+  {
+    "month": "April",
+    "label": "april",
+    "quote": "It was a bright cold day in April and the clocks were striking thirteen.",
+    "book": "Nineteen Eighty-Four",
+    "author": "George Orwell",
+    "biblio_link": "https://www.biblio.com/search.php?title=Nineteen+Eighty-Four&author=George+Orwell"
+  },
+  {
+    "month": "May",
+    "label": "may",
+    "quote": "Left Munich at 8.35 p.m. on 1st May arriving at Vienna early the next morning.",
+    "book": "Dracula",
+    "author": "Bram Stoker",
+    "biblio_link": "https://www.biblio.com/search.php?title=Dracula&author=Bram+Stoker"
+  },
+  {
+    "month": "June",
+    "label": "june",
+    "quote": "June 13 1990. Thirty-seven minutes past two in the morning. And sixteen seconds.",
+    "book": "The Stand",
+    "author": "Stephen King",
+    "biblio_link": "https://www.biblio.com/search.php?title=The+Stand&author=Stephen+King"
+  },
+  {
+    "month": "July",
+    "label": "july",
+    "quote": "At 7.29 in the morning of 1 July the cinematographer finds himself filming silence itself.",
+    "book": "At Break of Day",
+    "author": "Elizabeth Speller",
+    "biblio_link": "https://www.biblio.com/search.php?title=At+Break+of+Day&author=Elizabeth+Speller"
+  },
+  {
+    "month": "August",
+    "label": "august",
+    "quote": "Today was Tuesday the fifteenth of August; the sun had risen at eleven minutes past five this morning and would set at two minutes before seven this evening.",
+    "book": "The Hot Rock",
+    "author": "Donald E Westlake",
+    "biblio_link": "https://www.biblio.com/search.php?title=The+Hot+Rock&author=Donald+E+Westlake"
+  },
+  {
+    "month": "September",
+    "label": "september",
+    "quote": "Just after five o'clock on this chill September morning the fishmonger's cart containing Kirsten and Emilia and such possessions as they have been allowed to bring passed under the city gate.",
+    "book": "Music and Silence",
+    "author": "Rose Tremain",
+    "biblio_link": "https://www.biblio.com/search.php?title=Music+and+Silence&author=Rose+Tremain"
+  },
+  {
+    "month": "October",
+    "label": "october",
+    "quote": "23 October 1893 3.39am. Upon further thought I feel it necessary to explain that exile into the Master's workshop is not entirely a hardship.",
+    "book": "The Clockwork Man",
+    "author": "William Jablonsky",
+    "biblio_link": "https://www.biblio.com/search.php?title=The+Clockwork+Man&author=William+Jablonsky"
+  },
+  {
+    "month": "November",
+    "label": "november",
+    "quote": "I quite agree with you, said Mr Murbles. It is a most awkward situation. Lady Dormer died at precisely 10.37 a.m. on November 10th.",
+    "book": "The Unpleasantness at the Bellona Club",
+    "author": "Dorothy L. Sayers",
+    "biblio_link": "https://www.biblio.com/search.php?title=The+Unpleasantness+at+the+Bellona+Club&author=Dorothy+L.+Sayers"
+  },
+  {
+    "month": "December",
+    "label": "december",
+    "quote": "It was 5:02 a.m. December 14. In another fifty-eight minutes he would set sail for America. He did not want to leave his wife.",
+    "book": "The Prize",
+    "author": "Brenda Joyce",
+    "biblio_link": "https://www.biblio.com/search.php?title=The+Prize&author=Brenda+Joyce"
+  }
+]

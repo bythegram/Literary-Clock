@@ -3,9 +3,10 @@
   --color-bg: #ffffff;
   --color-text: #212529;
   --color-link: #0d6efd;
+  --color-bg-nav: rgba(255, 255, 255, 0.85);
   --font-quote: 'Roboto Slab', serif;
   --font-ui: 'Open Sans Condensed', sans-serif;
-  --credit-height: 2.5rem; /* matches the fixed height set on .credit below */
+  --credit-height: 2.5rem; /* matches the fixed height set on .nav-bar below */
   /* Font sizes — override these to customise the clock without touching layout rules.
      clamp(min, preferred, max): scales with the smaller viewport dimension so the
      same value works correctly in both landscape (vmin ≈ vh) and portrait (vmin ≈ vw),
@@ -18,6 +19,7 @@
   --color-bg: #1a1a2e;
   --color-text: #e9ecef;
   --color-link: #6ea8fe;
+  --color-bg-nav: rgba(26, 26, 46, 0.85);
 }
 
 /* ── Reset ────────────────────────────────────────────────────────────── */
@@ -108,8 +110,8 @@ strong {
   0% { opacity: 1;}
   100% { opacity: 0; }
 }
-/* ── Credit Footer ────────────────────────────────────────────────────── */
-.credit {
+/* ── Nav Bar Footer ───────────────────────────────────────────────────── */
+.nav-bar {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -117,6 +119,51 @@ strong {
   height: var(--credit-height);
   display: flex;
   align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-nav);
+  border-top: 1px solid currentColor;
+  padding: 0 0.5rem;
+}
+
+.mode-nav {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.mode-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--color-text);
+  opacity: 0.6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.mode-btn:hover {
+  opacity: 1;
+}
+
+.mode-btn.active {
+  opacity: 1;
+  font-weight: 700;
+  border-bottom: 2px solid var(--color-text);
+}
+
+/* ── Info Panel ───────────────────────────────────────────────────────── */
+.info-panel {
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: 1.1rem;
   padding: 0 1rem;
+}
+
+.info-text {
+  margin-bottom: 0.75rem;
 }
 
