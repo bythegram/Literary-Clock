@@ -1,6 +1,22 @@
 # Literally Clock — Data Gap Roadmap
 
-This document tracks every minute of the day that currently lacks a literary quote in `docs/litclock.json`, and outlines a research strategy for filling those gaps.
+This document tracks every minute of the day that currently lacks a literary quote in `docs/litclock.json`, and outlines a research strategy for filling those gaps. It also documents the coverage status of the calendar datasets introduced alongside the Clock mode.
+
+---
+
+## Calendar Datasets
+
+Three new datasets power the Day of Week, Date, and Month modes. Each file ships with one quote per entry; expanding them with additional quotes (like `litclock.json`) is encouraged.
+
+| File | Entries | Status |
+|---|---|---|
+| `docs/litdays.json` | 7 (one per weekday) | ✅ All days covered |
+| `docs/litdates.json` | Partial — see below | ⚠️ Not all dates covered |
+| `docs/litmonths.json` | 12 (one per month) | ✅ All months covered |
+
+### `litdates.json` coverage
+
+`litdates.json` was seeded from the existing `litclock.json` dataset, extracting entries whose `quote` field contains an explicit calendar date. Many dates remain uncovered; when no entry exists for today's date the app falls back to displaying the date in bold. Adding entries for missing dates follows the same process as adding clock quotes — find a literary passage explicitly mentioning a specific date and append the entry with `"date": "M/D"` (e.g. `"3/25"`).
 
 ---
 
