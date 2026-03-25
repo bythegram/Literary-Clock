@@ -78,6 +78,20 @@ strong {
   font-size: var(--font-size-quote-smaller);
 }
 
+/* ── Minute-transition fade ─────────────────────────────────────────── */
+/* Non-bold quote text and the author line both fade out over 2 s when the
+   .fading class is present on the content wrapper, leaving only the
+   <strong>-wrapped time phrase visible at the minute boundary. */
+.fade-text,
+.clock-content em {
+  transition: opacity 2s linear;
+}
+
+.clock-content.fading .fade-text,
+.clock-content.fading em {
+  opacity: 0;
+}
+
 /* ── Credit Footer ────────────────────────────────────────────────────── */
 .credit {
   position: fixed;
