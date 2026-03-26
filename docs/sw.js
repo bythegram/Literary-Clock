@@ -1,4 +1,4 @@
-var CACHE_NAME = 'literary-clock-v6';
+var CACHE_NAME = 'literary-clock-v7';
 var ASSETS = [
   './',
   './index.html',
@@ -7,6 +7,8 @@ var ASSETS = [
   './sw-register.js',
   './style.css',
   './fonts.css',
+  './fonts/playfair-display-400-latin.woff2',
+  './fonts/playfair-display-latin-ext.woff2',
   './fonts/z7NFdQDnbTkabZAIOl9il_O6KJj73e7Ff1GhDujMR6WR.woff2',
   './fonts/z7NFdQDnbTkabZAIOl9il_O6KJj73e7Ff1GhDuHMR6WR.woff2',
   './fonts/z7NFdQDnbTkabZAIOl9il_O6KJj73e7Ff1GhDunMR6WR.woff2',
