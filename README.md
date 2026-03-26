@@ -97,13 +97,13 @@ Navigate to `http://localhost:3000/`. The app is served from the `docs/` directo
 
 ### Clock mode
 1. On load, `shuffleArray()` randomises the quote dataset so multiple quotes for the same minute appear in a random order across visits.
-2. `getTime()` reads the current hour and zero-padded minute, filters `litclock.json` for matching `timecode` entries, and returns the first result (random due to the shuffle).
-3. A `setTimeout` fires at the next wall-clock minute boundary (computed as `(60 - seconds) * 1000 - milliseconds`), then reschedules itself. This ensures the quote always updates within a second of the minute changing.
+2. `getTime()` reads the current hour and zero-padded minute via `Temporal.Now.zonedDateTimeISO()`, filters `litclock.json` for matching `timecode` entries, and returns the first result (random due to the shuffle).
+3. A `setTimeout` fires at the next wall-clock minute boundary (computed via `Temporal.ZonedDateTime.until().total('milliseconds')`), then reschedules itself. This ensures the quote always updates within a millisecond of the minute changing.
 
 ### Calendar modes
-- **Day of Week** (`litdays.json`) — matches entries by `day` field against `Date.getDay()`; `setTimeout` re-anchors to the next midnight.
-- **Date** (`litdates.json`) — matches entries by `date` field (`"M/D"` format) against `getMonth()+1 + '/' + getDate()`; `setTimeout` re-anchors to the next midnight.
-- **Month** (`litmonths.json`) — matches entries by `month` field against `Date.getMonth()`; `setTimeout` re-anchors to the first instant of the next month.
+- **Day of Week** (`litdays.json`) — matches entries by `day` field against the locale day name from `Temporal.Now.zonedDateTimeISO()`; `setTimeout` re-anchors to the next midnight.
+- **Date** (`litdates.json`) — matches entries by `date` field (`"M/D"` format) against `Temporal.Now.plainDateISO().month + '/' + day` (1-based, no `+1` hack); `setTimeout` re-anchors to the next midnight.
+- **Month** (`litmonths.json`) — matches entries by `month` field against the locale month name from `Temporal.Now.zonedDateTimeISO()`; `setTimeout` re-anchors to the first instant of the next month.
 
 Each mode has its own independent `setTimeout` chain; a midnight tick for the Day/Date scheduler never disturbs the Clock display.
 
