@@ -45,6 +45,11 @@
     return arr;
   }
 
+  function pickRandom(arr) {
+    if (!arr.length) { return undefined; }
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
   function buildQuoteResult(item, fallbackLabel) {
     var quote = item.quote;
     var label = item.label || fallbackLabel || '';
@@ -79,7 +84,7 @@
     var matches = data.filter(function (item) {
       return item.timecode === time;
     });
-    var item = matches[Math.floor(Math.random() * matches.length)];
+    var item = pickRandom(matches);
     if (item) {
       return buildQuoteResult(item, time);
     }
@@ -92,7 +97,7 @@
     var matches = data.filter(function (item) {
       return item.day === dayName;
     });
-    var item = matches[Math.floor(Math.random() * matches.length)];
+    var item = pickRandom(matches);
     if (item) {
       return buildQuoteResult(item, dayName);
     }
@@ -106,7 +111,7 @@
     var matches = data.filter(function (item) {
       return item.date === dateKey;
     });
-    var item = matches[Math.floor(Math.random() * matches.length)];
+    var item = pickRandom(matches);
     if (item) {
       return buildQuoteResult(item, item.label);
     }
@@ -121,7 +126,7 @@
     var matches = data.filter(function (item) {
       return item.month === monthName;
     });
-    var item = matches[Math.floor(Math.random() * matches.length)];
+    var item = pickRandom(matches);
     if (item) {
       return buildQuoteResult(item, monthName);
     }
