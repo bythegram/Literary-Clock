@@ -79,7 +79,7 @@
     var matches = data.filter(function (item) {
       return item.timecode === time;
     });
-    var item = matches[0];
+    var item = matches[Math.floor(Math.random() * matches.length)];
     if (item) {
       return buildQuoteResult(item, time);
     }
@@ -92,7 +92,7 @@
     var matches = data.filter(function (item) {
       return item.day === dayName;
     });
-    var item = matches[0];
+    var item = matches[Math.floor(Math.random() * matches.length)];
     if (item) {
       return buildQuoteResult(item, dayName);
     }
@@ -106,7 +106,7 @@
     var matches = data.filter(function (item) {
       return item.date === dateKey;
     });
-    var item = matches[0];
+    var item = matches[Math.floor(Math.random() * matches.length)];
     if (item) {
       return buildQuoteResult(item, item.label);
     }
@@ -121,7 +121,7 @@
     var matches = data.filter(function (item) {
       return item.month === monthName;
     });
-    var item = matches[0];
+    var item = matches[Math.floor(Math.random() * matches.length)];
     if (item) {
       return buildQuoteResult(item, monthName);
     }
