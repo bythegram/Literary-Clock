@@ -130,7 +130,6 @@ strong {
 
 /* ── Quote Text ───────────────────────────────────────────────────────── */
 .quote-text {
-  text-transform: uppercase;
   font-size: var(--font-size-quote);
   line-height: 1.2;
   font-family: var(--font-quote);
