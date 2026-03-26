@@ -120,14 +120,9 @@
       linkEl.target = '_blank';
       linkEl.rel = 'noopener noreferrer';
       linkEl.className = 'book-btn';
-      var labelSpan = document.createElement('span');
-      labelSpan.textContent = litTime.book ? 'View Book: ' : 'View Book';
-      linkEl.appendChild(labelSpan);
-      if (litTime.book) {
-        var titleEm = document.createElement('em');
-        titleEm.textContent = litTime.book;
-        linkEl.appendChild(titleEm);
-      }
+      var titleSpan = document.createElement('span');
+      titleSpan.textContent = litTime.book;
+      linkEl.appendChild(titleSpan);
       bookContainerEl.appendChild(linkEl);
     } else if (litTime.book) {
       var titleEl = document.createElement('span');
