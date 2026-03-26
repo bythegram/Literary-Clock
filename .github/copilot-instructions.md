@@ -24,6 +24,7 @@ Literary-Clock/
 ├── docs/                       # ← The entire deployed application lives here
 │   ├── index.html              # App shell HTML; sets data-theme for dark mode, enforces CSP
 │   ├── app.js                  # All clock logic (ES5 IIFE); no build or bundler
+│   ├── temporal-polyfill.js    # @js-temporal/polyfill v0.5.1 UMD bundle; polyfills Temporal where not natively available (e.g. iOS PWA standalone)
 │   ├── theme.js                # Dark/light theme detection — loaded before CSS in <head>
 │   ├── sw-register.js          # Service worker registration — loaded at end of <body>
 │   ├── style.css               # Custom CSS; CSS custom properties, dark mode, responsive layout
@@ -50,7 +51,7 @@ Literary-Clock/
 | Layer | Technology | Notes |
 |---|---|---|
 | Language | Vanilla JavaScript (IIFE) | The entire app is one IIFE in `docs/app.js` — no modules, no transpilation; outer-scope variables use `var` |
-| Time API | **Temporal API** (native) | Clock logic uses `Temporal.Now.zonedDateTimeISO()` and `Temporal.Now.plainDateISO()` — requires a browser with native [Temporal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal) support; see [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal#browser_compatibility). No polyfill is bundled. |
+| Time API | **Temporal API** (with polyfill) | Clock logic uses `Temporal.Now.zonedDateTimeISO()` and `Temporal.Now.plainDateISO()`. `docs/temporal-polyfill.js` (the `@js-temporal/polyfill` v0.5.1 UMD bundle) is loaded before `app.js` so Temporal is available even where not natively supported (e.g. iOS PWA standalone mode). |
 | Styling | Custom CSS (`docs/style.css`) | CSS custom properties (`--color-bg`, `--color-text`, `--font-size-quote`, etc.); dark mode via `[data-theme="dark"]` on `<html>` |
 | Fonts | Self-hosted Playfair Display (quote serif, primary), Open Sans Condensed (UI sans-serif), Roboto Slab (fallback) | Declared in `docs/fonts.css`; woff2 files in `docs/fonts/` — **no CDN dependency**. `style.css` CSS reset includes `[hidden] { display: none !important }` to ensure the `hidden` HTML attribute is never overridden by a CSS `display` value. |
 | Offline / PWA | Service worker + Web App Manifest | `docs/sw.js` caches all assets; `docs/manifest.json` enables PWA install |
