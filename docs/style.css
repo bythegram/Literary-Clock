@@ -248,6 +248,7 @@ strong {
   font-size: 1.1rem;
   padding: 0 1.5rem;
   min-height: calc(100vh - var(--nav-total-height));
+  width: 100%;
 }
 
 .info-text {
