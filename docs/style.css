@@ -79,7 +79,6 @@ strong {
 .clock-content {
   max-width: 100%;
   width: 100%;
-  will-change: transform;
 }
 
 /* ── Attribution ──────────────────────────────────────────────────────── */
@@ -249,7 +248,6 @@ strong {
   font-size: 1.1rem;
   padding: 0 1.5rem;
   min-height: calc(100vh - var(--nav-total-height));
-  will-change: transform;
 }
 
 .info-text {
@@ -267,12 +265,14 @@ strong {
 }
 
 /* ── Swipe Navigation Animations ─────────────────────────────────────── */
-.slide-out-left  { animation: slideOutLeft  0.22s ease forwards; }
-.slide-out-right { animation: slideOutRight 0.22s ease forwards; }
-.slide-in-left   { animation: slideInLeft   0.22s ease both; }
-.slide-in-right  { animation: slideInRight  0.22s ease both; }
-.swipe-bounce-left  { animation: swipeBounceLeft  0.3s ease; }
-.swipe-bounce-right { animation: swipeBounceRight 0.3s ease; }
+/* will-change is scoped to the animation classes so it's only active during
+   transitions, avoiding permanent memory overhead on low-end devices. */
+.slide-out-left  { animation: slideOutLeft  0.22s ease forwards; will-change: transform; }
+.slide-out-right { animation: slideOutRight 0.22s ease forwards; will-change: transform; }
+.slide-in-left   { animation: slideInLeft   0.22s ease both;     will-change: transform; }
+.slide-in-right  { animation: slideInRight  0.22s ease both;     will-change: transform; }
+.swipe-bounce-left  { animation: swipeBounceLeft  0.3s ease; will-change: transform; }
+.swipe-bounce-right { animation: swipeBounceRight 0.3s ease; will-change: transform; }
 
 @keyframes slideOutLeft {
   from { transform: translateX(0);    opacity: 1; }

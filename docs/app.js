@@ -7,13 +7,23 @@
   var loadedCount = 0;
   var TOTAL_FILES = 4;
 
-  // Navigation order for swipe gestures: swipe left advances, swipe right regresses
-  var MODES = ['clock', 'day', 'date', 'month', 'info'];
+  // Navigation order derived from the DOM so button order in index.html stays
+  // the single source of truth for both visual position and swipe direction.
+  var MODES = (function () {
+    var btns = document.querySelectorAll('.mode-btn[data-mode]');
+    var result = [];
+    for (var i = 0; i < btns.length; i++) {
+      var mode = btns[i].getAttribute('data-mode');
+      if (mode) { result.push(mode); }
+    }
+    return result.length ? result : ['clock', 'day', 'date', 'month', 'info'];
+  }());
   var SWIPE_THRESHOLD = 50;
   var ANIM_MS = 220;
   var isAnimating = false;
   var touchStartX = 0;
   var touchStartY = 0;
+  var touchId = null;
 
   var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -200,8 +210,15 @@
     if (nextIdx < 0 || nextIdx >= MODES.length) {
       var bounceClass = direction === 'left' ? 'swipe-bounce-left' : 'swipe-bounce-right';
       var bounceEl = getActiveEl(currentMode);
+      // Remove first + force reflow so re-adding the class always restarts the animation,
+      // even if a previous bounce is still in progress (e.g. rapid repeated edge swipes).
+      bounceEl.classList.remove(bounceClass);
+      void bounceEl.offsetWidth;
       bounceEl.classList.add(bounceClass);
-      setTimeout(function () { bounceEl.classList.remove(bounceClass); }, 300);
+      bounceEl.addEventListener('animationend', function cleanup() {
+        bounceEl.classList.remove(bounceClass);
+        bounceEl.removeEventListener('animationend', cleanup);
+      });
       return;
     }
 
@@ -247,15 +264,28 @@
       }(buttons[i]));
     }
 
-    // Wire up swipe gestures
+    // Wire up swipe gestures — track a single touch identifier to ignore multi-touch
+    // gestures (pinch-zoom etc.) that would produce spurious large deltas.
     var container = document.querySelector('.clock-container');
     container.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) { touchId = null; return; }
+      touchId = e.touches[0].identifier;
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
     }, { passive: true });
     container.addEventListener('touchend', function (e) {
-      var deltaX = e.changedTouches[0].clientX - touchStartX;
-      var deltaY = e.changedTouches[0].clientY - touchStartY;
+      if (touchId === null) { return; }
+      var touch = null;
+      for (var i = 0; i < e.changedTouches.length; i++) {
+        if (e.changedTouches[i].identifier === touchId) {
+          touch = e.changedTouches[i];
+          break;
+        }
+      }
+      touchId = null;
+      if (!touch) { return; }
+      var deltaX = touch.clientX - touchStartX;
+      var deltaY = touch.clientY - touchStartY;
       if (Math.abs(deltaX) >= SWIPE_THRESHOLD && Math.abs(deltaX) > Math.abs(deltaY)) {
         navigateSwipe(deltaX < 0 ? 'left' : 'right');
       }
