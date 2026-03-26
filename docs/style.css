@@ -1,25 +1,36 @@
 /* ── CSS Custom Properties (Theming) ──────────────────────────────────── */
 :root {
-  --color-bg: #ffffff;
-  --color-text: #212529;
-  --color-link: #0d6efd;
-  --color-bg-nav: rgba(255, 255, 255, 0.85);
-  --font-quote: 'Roboto Slab', serif;
-  --font-ui: 'Open Sans Condensed', sans-serif;
-  --credit-height: 2.5rem; /* matches the fixed height set on .nav-bar below */
-  /* Font sizes — override these to customise the clock without touching layout rules.
-     clamp(min, preferred, max): scales with the smaller viewport dimension so the
-     same value works correctly in both landscape (vmin ≈ vh) and portrait (vmin ≈ vw),
-     removing the need for a separate orientation media query. */
+  --color-bg: #f5f4ef;
+  --color-bg-end: #e8e6df;
+  --color-text: #1a1a2e;
+  --color-text-muted: rgba(26, 26, 46, 0.55);
+  --color-link: #2c5f8a;
+  --color-accent: #2c5f8a;
+  --color-bg-nav: rgba(245, 244, 239, 0.95);
+  --color-nav-icon: rgba(26, 26, 46, 0.45);
+  --color-nav-active: #1a1a2e;
+  --font-quote: 'Playfair Display', 'Roboto Slab', Georgia, serif;
+  --font-ui: 'Open Sans Condensed', system-ui, sans-serif;
+  --nav-height: 72px;
+  /* Total nav footprint including iOS safe-area inset. Use this for any
+     min-height / padding-bottom calculations that need to clear the nav bar. */
+  --nav-total-height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px));
+  /* Font sizes — clamp() scales with the smaller viewport dimension so the
+     same value works correctly in both landscape and portrait orientations. */
   --font-size-quote:        clamp(1.5rem,  8vmin, 6rem);
   --font-size-quote-smaller: clamp(1.25rem, 6vmin, 5rem);
 }
 
 [data-theme="dark"] {
-  --color-bg: #1a1a2e;
-  --color-text: #e9ecef;
-  --color-link: #6ea8fe;
-  --color-bg-nav: rgba(26, 26, 46, 0.85);
+  --color-bg: #0d1b2a;
+  --color-bg-end: #1e2d40;
+  --color-text: #e8e6e1;
+  --color-text-muted: rgba(232, 230, 225, 0.55);
+  --color-link: #7db8d4;
+  --color-accent: #7db8d4;
+  --color-bg-nav: rgba(8, 14, 26, 0.97);
+  --color-nav-icon: rgba(232, 230, 225, 0.45);
+  --color-nav-active: #ffffff;
 }
 
 /* ── Reset ────────────────────────────────────────────────────────────── */
@@ -27,11 +38,22 @@
   box-sizing: border-box;
 }
 
+/* Ensure CSS `display` values never override the HTML `hidden` attribute */
+[hidden] {
+  display: none !important;
+}
+
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
+  min-height: 100%;
   font-size: 16px;
   font-family: var(--font-ui);
-  background-color: var(--color-bg);
+  background: linear-gradient(to bottom, var(--color-bg) 0%, var(--color-bg-end) 100%);
+  background-attachment: fixed;
   color: var(--color-text);
 }
 
@@ -52,19 +74,60 @@ strong {
 .clock-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding-bottom: var(--credit-height);
+  justify-content: flex-start;
+  min-height: calc(100vh - var(--nav-total-height));
+  padding: 2rem 1.5rem 2rem;
 }
 
 .clock-content {
   max-width: 100%;
-  max-height: calc(100vh - var(--credit-height)); /* cap content height so it never overlaps the fixed credit footer */
-  padding: 0 1rem;
+  width: 100%;
 }
 
+/* ── Attribution ──────────────────────────────────────────────────────── */
 .attribution {
   text-align: right;
+  margin-top: 1rem;
+}
+
+.author-credit {
+  font-family: var(--font-ui);
+  font-size: clamp(0.9rem, 2.5vmin, 1.1rem);
+  font-style: italic;
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+/* ── Ghost "View Book" Button ─────────────────────────────────────────── */
+.book-btn {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border: 1.5px solid var(--color-accent);
+  border-radius: 6px;
+  font-family: var(--font-ui);
+  font-size: clamp(0.7rem, 2vmin, 0.85rem);
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  background: transparent;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background-color 0.15s, color 0.15s;
+  white-space: normal;
+}
+
+.book-btn:hover {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+  text-decoration: none;
+}
+
+.book-title-plain {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: clamp(0.8rem, 2vmin, 0.95rem);
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: 0.25rem;
 }
 
 /* ── Quote Text ───────────────────────────────────────────────────────── */
@@ -73,7 +136,8 @@ strong {
   font-size: var(--font-size-quote);
   line-height: 1.2;
   font-family: var(--font-quote);
-  font-weight: 300;
+  font-weight: 400;
+  margin-bottom: 0;
 }
 
 .quote-text.smaller {
@@ -83,8 +147,7 @@ strong {
 /* ── Minute-transition fade ─────────────────────────────────────────── */
 /* At each minute boundary the content wrapper snaps to opacity:0, new
    content is rendered, then .fading is removed to start a 60 s fade-in.
-   Only the non-bold portions (non-time-phrase text, attribution) participate
-   so the <strong>-wrapped time phrase is always fully visible. */
+   Only the non-bold portions participate so the time phrase is always visible. */
 .clock-content.fading .quote-text span {
   -webkit-animation: fadeOut 60s;
   -moz-animation: fadeOut 60s;
@@ -110,60 +173,99 @@ strong {
   0% { opacity: 1;}
   100% { opacity: 0; }
 }
+
 /* ── Nav Bar Footer ───────────────────────────────────────────────────── */
 .nav-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: var(--credit-height);
+  /* Height covers the visible icon row plus iOS home-indicator safe area.
+     The padding-bottom pushes the button content up into the icon row so
+     tap targets are never squeezed by the inset. */
+  height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px));
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background-color: var(--color-bg-nav);
-  border-top: 1px solid currentColor;
-  padding: 0 0.5rem;
+  border-top: 1px solid rgba(128, 128, 128, 0.2);
+  padding: 0;
 }
 
 .mode-nav {
   display: flex;
-  gap: 0.25rem;
-  align-items: center;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 480px;
+  height: var(--nav-height);
 }
 
+/* ── Nav Buttons ──────────────────────────────────────────────────────── */
 .mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
   background: none;
   border: none;
   cursor: pointer;
-  font-family: var(--font-ui);
-  font-size: 0.8rem;
-  color: var(--color-text);
-  opacity: 0.6;
-  padding: 0.25rem 0.5rem;
-  border-radius: 3px;
-  transition: opacity 0.2s;
-  white-space: nowrap;
+  padding: 0.5rem 0.25rem 0.4rem;
+  /* minimum 44×44px touch target per AC 1.2 */
+  min-width: 44px;
+  min-height: 44px;
+  gap: 0.2rem;
+  color: var(--color-nav-icon);
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mode-btn:hover {
-  opacity: 1;
+  color: var(--color-text);
 }
 
 .mode-btn.active {
-  opacity: 1;
-  font-weight: 700;
-  border-bottom: 2px solid var(--color-text);
+  color: var(--color-nav-active);
+  border-top: 2px solid var(--color-nav-active);
+  padding-top: calc(0.5rem - 2px);
+}
+
+.mode-btn svg {
+  flex-shrink: 0;
+}
+
+.nav-label {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 /* ── Info Panel ───────────────────────────────────────────────────────── */
 .info-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   font-family: var(--font-ui);
   font-size: 1.1rem;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
+  min-height: calc(100vh - var(--nav-total-height));
 }
 
 .info-text {
   margin-bottom: 0.75rem;
+}
+
+.info-text a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-accent);
+}
+
+.info-text a:hover {
+  opacity: 0.8;
 }
 

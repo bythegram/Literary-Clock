@@ -4,8 +4,8 @@
   "description": "The current time as a quotation from world literature",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1a1a2e",
+  "background_color": "#0d1b2a",
+  "theme_color": "#0d1b2a",
   "icons": [
     {
       "src": "favicon.ico",

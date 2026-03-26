@@ -104,22 +104,37 @@
 
   function renderQuoteResult(litTime) {
     var quoteEl = document.getElementById('quote');
-    var bookEl = document.getElementById('book');
     var authorEl = document.getElementById('author');
+    var bookContainerEl = document.getElementById('book-container');
 
     quoteEl.innerHTML = litTime.quote;
+
+    var hasAuthor = typeof litTime.author === 'string' && litTime.author.trim() !== '';
+    authorEl.textContent = hasAuthor ? litTime.author : '';
+    authorEl.hidden = !hasAuthor;
+
+    bookContainerEl.innerHTML = '';
     if (litTime.biblio_link) {
       var linkEl = document.createElement('a');
       linkEl.href = litTime.biblio_link;
       linkEl.target = '_blank';
       linkEl.rel = 'noopener noreferrer';
-      linkEl.textContent = litTime.book;
-      bookEl.innerHTML = '';
-      bookEl.appendChild(linkEl);
-    } else {
-      bookEl.textContent = litTime.book;
+      linkEl.className = 'book-btn';
+      var labelSpan = document.createElement('span');
+      labelSpan.textContent = litTime.book ? 'View Book: ' : 'View Book';
+      linkEl.appendChild(labelSpan);
+      if (litTime.book) {
+        var titleEm = document.createElement('em');
+        titleEm.textContent = litTime.book;
+        linkEl.appendChild(titleEm);
+      }
+      bookContainerEl.appendChild(linkEl);
+    } else if (litTime.book) {
+      var titleEl = document.createElement('span');
+      titleEl.className = 'book-title-plain';
+      titleEl.textContent = litTime.book;
+      bookContainerEl.appendChild(titleEl);
     }
-    authorEl.textContent = litTime.author;
 
     if (litTime.rawLength > 300) {
       quoteEl.classList.add('smaller');
