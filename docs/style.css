@@ -73,11 +73,13 @@ strong {
   justify-content: flex-start;
   min-height: calc(100vh - var(--nav-total-height));
   padding: 2rem 1.5rem 2rem;
+  overflow: hidden;
 }
 
 .clock-content {
   max-width: 100%;
   width: 100%;
+  will-change: transform;
 }
 
 /* ── Attribution ──────────────────────────────────────────────────────── */
@@ -247,6 +249,7 @@ strong {
   font-size: 1.1rem;
   padding: 0 1.5rem;
   min-height: calc(100vh - var(--nav-total-height));
+  will-change: transform;
 }
 
 .info-text {
@@ -261,5 +264,40 @@ strong {
 
 .info-text a:hover {
   opacity: 0.8;
+}
+
+/* ── Swipe Navigation Animations ─────────────────────────────────────── */
+.slide-out-left  { animation: slideOutLeft  0.22s ease forwards; }
+.slide-out-right { animation: slideOutRight 0.22s ease forwards; }
+.slide-in-left   { animation: slideInLeft   0.22s ease both; }
+.slide-in-right  { animation: slideInRight  0.22s ease both; }
+.swipe-bounce-left  { animation: swipeBounceLeft  0.3s ease; }
+.swipe-bounce-right { animation: swipeBounceRight 0.3s ease; }
+
+@keyframes slideOutLeft {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(-40px); opacity: 0; }
+}
+@keyframes slideOutRight {
+  from { transform: translateX(0);   opacity: 1; }
+  to   { transform: translateX(40px); opacity: 0; }
+}
+@keyframes slideInLeft {
+  from { transform: translateX(-40px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes slideInRight {
+  from { transform: translateX(40px); opacity: 0; }
+  to   { transform: translateX(0);   opacity: 1; }
+}
+@keyframes swipeBounceLeft {
+  0%, 100% { transform: translateX(0); }
+  40%      { transform: translateX(-12px); }
+  70%      { transform: translateX(4px); }
+}
+@keyframes swipeBounceRight {
+  0%, 100% { transform: translateX(0); }
+  40%      { transform: translateX(12px); }
+  70%      { transform: translateX(-4px); }
 }
 

@@ -7,6 +7,14 @@
   var loadedCount = 0;
   var TOTAL_FILES = 4;
 
+  // Navigation order for swipe gestures: swipe left advances, swipe right regresses
+  var MODES = ['clock', 'day', 'date', 'month', 'info'];
+  var SWIPE_THRESHOLD = 50;
+  var ANIM_MS = 220;
+  var isAnimating = false;
+  var touchStartX = 0;
+  var touchStartY = 0;
+
   var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
                      'July', 'August', 'September', 'October', 'November', 'December'];
@@ -164,6 +172,60 @@
     showMode(currentMode);
   }
 
+  function activateNavButton(mode) {
+    var buttons = document.querySelectorAll('.mode-btn');
+    for (var i = 0; i < buttons.length; i++) {
+      var isActive = buttons[i].getAttribute('data-mode') === mode;
+      if (isActive) {
+        buttons[i].classList.add('active');
+        buttons[i].setAttribute('aria-pressed', 'true');
+      } else {
+        buttons[i].classList.remove('active');
+        buttons[i].setAttribute('aria-pressed', 'false');
+      }
+    }
+  }
+
+  function getActiveEl(mode) {
+    return mode === 'info'
+      ? document.getElementById('info-panel')
+      : document.getElementById('clock-content');
+  }
+
+  function navigateSwipe(direction) {
+    if (isAnimating) { return; }
+    var idx = MODES.indexOf(currentMode);
+    var nextIdx = direction === 'left' ? idx + 1 : idx - 1;
+
+    if (nextIdx < 0 || nextIdx >= MODES.length) {
+      var bounceClass = direction === 'left' ? 'swipe-bounce-left' : 'swipe-bounce-right';
+      var bounceEl = getActiveEl(currentMode);
+      bounceEl.classList.add(bounceClass);
+      setTimeout(function () { bounceEl.classList.remove(bounceClass); }, 300);
+      return;
+    }
+
+    isAnimating = true;
+    var nextMode = MODES[nextIdx];
+    var outClass = direction === 'left' ? 'slide-out-left' : 'slide-out-right';
+    var inClass  = direction === 'left' ? 'slide-in-right' : 'slide-in-left';
+    var outEl = getActiveEl(currentMode);
+
+    outEl.classList.add(outClass);
+    setTimeout(function () {
+      outEl.classList.remove(outClass);
+      currentMode = nextMode;
+      activateNavButton(currentMode);
+      showMode(currentMode);
+      var inEl = getActiveEl(currentMode);
+      inEl.classList.add(inClass);
+      setTimeout(function () {
+        inEl.classList.remove(inClass);
+        isAnimating = false;
+      }, ANIM_MS);
+    }, ANIM_MS);
+  }
+
   function onAllLoaded() {
     loadedCount++;
     if (loadedCount < TOTAL_FILES) { return; }
@@ -177,17 +239,27 @@
     for (var i = 0; i < buttons.length; i++) {
       (function (btn) {
         btn.addEventListener('click', function () {
+          if (isAnimating) { return; }
           currentMode = btn.getAttribute('data-mode');
-          for (var k = 0; k < buttons.length; k++) {
-            buttons[k].classList.remove('active');
-            buttons[k].setAttribute('aria-pressed', 'false');
-          }
-          btn.classList.add('active');
-          btn.setAttribute('aria-pressed', 'true');
+          activateNavButton(currentMode);
           showMode(currentMode);
         });
       }(buttons[i]));
     }
+
+    // Wire up swipe gestures
+    var container = document.querySelector('.clock-container');
+    container.addEventListener('touchstart', function (e) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    container.addEventListener('touchend', function (e) {
+      var deltaX = e.changedTouches[0].clientX - touchStartX;
+      var deltaY = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(deltaX) >= SWIPE_THRESHOLD && Math.abs(deltaX) > Math.abs(deltaY)) {
+        navigateSwipe(deltaX < 0 ? 'left' : 'right');
+      }
+    }, { passive: true });
 
     // ── Timing helpers ──────────────────────────────────────────────────
     function msUntilNextMinute() {
