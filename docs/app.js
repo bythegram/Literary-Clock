@@ -108,7 +108,10 @@
     var bookContainerEl = document.getElementById('book-container');
 
     quoteEl.innerHTML = litTime.quote;
-    authorEl.textContent = litTime.author;
+
+    var hasAuthor = typeof litTime.author === 'string' && litTime.author.trim() !== '';
+    authorEl.textContent = hasAuthor ? litTime.author : '';
+    authorEl.hidden = !hasAuthor;
 
     bookContainerEl.innerHTML = '';
     if (litTime.biblio_link) {

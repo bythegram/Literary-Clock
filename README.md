@@ -30,7 +30,7 @@ A literary clock that displays the current time — and calendar context — thr
 |---|---|
 | Language | Vanilla JavaScript (ES5 IIFE) |
 | Styling | Custom CSS (`style.css`) with CSS custom properties; dark mode via `data-theme` attribute |
-| Fonts | Self-hosted Open Sans Condensed and Roboto Slab (declared in `fonts.css`, files in `docs/fonts/`) |
+| Fonts | Self-hosted Playfair Display (quote serif, primary) and Open Sans Condensed (UI sans-serif); Roboto Slab is kept as a fallback. All declared in `fonts.css`, files in `docs/fonts/` |
 | Data | JSON |
 | Offline / PWA | Service worker (`sw.js`) caches all assets; Web App Manifest (`manifest.json`) |
 | Security | `Content-Security-Policy` meta tag (`script-src 'self'`, no `unsafe-inline`) |

@@ -12,6 +12,9 @@
   --font-quote: 'Playfair Display', 'Roboto Slab', Georgia, serif;
   --font-ui: 'Open Sans Condensed', system-ui, sans-serif;
   --nav-height: 72px;
+  /* Total nav footprint including iOS safe-area inset. Use this for any
+     min-height / padding-bottom calculations that need to clear the nav bar. */
+  --nav-total-height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px));
   /* Font sizes — clamp() scales with the smaller viewport dimension so the
      same value works correctly in both landscape and portrait orientations. */
   --font-size-quote:        clamp(1.5rem,  8vmin, 6rem);
@@ -33,6 +36,11 @@
 /* ── Reset ────────────────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
+/* Ensure CSS `display` values never override the HTML `hidden` attribute */
+[hidden] {
+  display: none !important;
 }
 
 html {
@@ -67,7 +75,7 @@ strong {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  min-height: calc(100vh - var(--nav-height));
+  min-height: calc(100vh - var(--nav-total-height));
   padding: 2rem 1.5rem 2rem;
 }
 
@@ -104,7 +112,7 @@ strong {
   text-decoration: none;
   text-transform: uppercase;
   transition: background-color 0.15s, color 0.15s;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .book-btn:hover {
@@ -172,22 +180,24 @@ strong {
   bottom: 0;
   left: 0;
   right: 0;
-  height: var(--nav-height);
+  /* Height covers the visible icon row plus iOS home-indicator safe area.
+     The padding-bottom pushes the button content up into the icon row so
+     tap targets are never squeezed by the inset. */
+  height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px));
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   justify-content: center;
   background-color: var(--color-bg-nav);
   border-top: 1px solid rgba(128, 128, 128, 0.2);
   padding: 0;
-  /* safe area inset for iOS home indicator */
-  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .mode-nav {
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   width: 100%;
   max-width: 480px;
+  height: var(--nav-height);
 }
 
 /* ── Nav Buttons ──────────────────────────────────────────────────────── */
@@ -242,7 +252,7 @@ strong {
   font-family: var(--font-ui);
   font-size: 1.1rem;
   padding: 0 1.5rem;
-  min-height: calc(100vh - var(--nav-height));
+  min-height: calc(100vh - var(--nav-total-height));
 }
 
 .info-text {
