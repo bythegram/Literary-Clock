@@ -73,6 +73,7 @@ strong {
   justify-content: flex-start;
   min-height: calc(100vh - var(--nav-total-height));
   padding: 2rem 1.5rem 2rem;
+  overflow: hidden;
 }
 
 .clock-content {
@@ -261,5 +262,42 @@ strong {
 
 .info-text a:hover {
   opacity: 0.8;
+}
+
+/* ── Swipe Navigation Animations ─────────────────────────────────────── */
+/* will-change is scoped to the animation classes so it's only active during
+   transitions, avoiding permanent memory overhead on low-end devices. */
+.slide-out-left  { animation: slideOutLeft  0.22s ease forwards; will-change: transform; }
+.slide-out-right { animation: slideOutRight 0.22s ease forwards; will-change: transform; }
+.slide-in-left   { animation: slideInLeft   0.22s ease both;     will-change: transform; }
+.slide-in-right  { animation: slideInRight  0.22s ease both;     will-change: transform; }
+.swipe-bounce-left  { animation: swipeBounceLeft  0.3s ease; will-change: transform; }
+.swipe-bounce-right { animation: swipeBounceRight 0.3s ease; will-change: transform; }
+
+@keyframes slideOutLeft {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(-40px); opacity: 0; }
+}
+@keyframes slideOutRight {
+  from { transform: translateX(0);   opacity: 1; }
+  to   { transform: translateX(40px); opacity: 0; }
+}
+@keyframes slideInLeft {
+  from { transform: translateX(-40px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes slideInRight {
+  from { transform: translateX(40px); opacity: 0; }
+  to   { transform: translateX(0);   opacity: 1; }
+}
+@keyframes swipeBounceLeft {
+  0%, 100% { transform: translateX(0); }
+  40%      { transform: translateX(-12px); }
+  70%      { transform: translateX(4px); }
+}
+@keyframes swipeBounceRight {
+  0%, 100% { transform: translateX(0); }
+  40%      { transform: translateX(12px); }
+  70%      { transform: translateX(-4px); }
 }
 

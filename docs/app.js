@@ -7,6 +7,24 @@
   var loadedCount = 0;
   var TOTAL_FILES = 4;
 
+  // Navigation order derived from the DOM so button order in index.html stays
+  // the single source of truth for both visual position and swipe direction.
+  var MODES = (function () {
+    var btns = document.querySelectorAll('.mode-btn[data-mode]');
+    var result = [];
+    for (var i = 0; i < btns.length; i++) {
+      var mode = btns[i].getAttribute('data-mode');
+      if (mode) { result.push(mode); }
+    }
+    return result.length ? result : ['clock', 'day', 'date', 'month', 'info'];
+  }());
+  var SWIPE_THRESHOLD = 50;
+  var ANIM_MS = 220;
+  var isAnimating = false;
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var touchId = null;
+
   var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
                      'July', 'August', 'September', 'October', 'November', 'December'];
@@ -164,6 +182,67 @@
     showMode(currentMode);
   }
 
+  function activateNavButton(mode) {
+    var buttons = document.querySelectorAll('.mode-btn');
+    for (var i = 0; i < buttons.length; i++) {
+      var isActive = buttons[i].getAttribute('data-mode') === mode;
+      if (isActive) {
+        buttons[i].classList.add('active');
+        buttons[i].setAttribute('aria-pressed', 'true');
+      } else {
+        buttons[i].classList.remove('active');
+        buttons[i].setAttribute('aria-pressed', 'false');
+      }
+    }
+  }
+
+  function getActiveEl(mode) {
+    return mode === 'info'
+      ? document.getElementById('info-panel')
+      : document.getElementById('clock-content');
+  }
+
+  function navigateSwipe(direction) {
+    if (isAnimating) { return; }
+    var idx = MODES.indexOf(currentMode);
+    var nextIdx = direction === 'left' ? idx + 1 : idx - 1;
+
+    if (nextIdx < 0 || nextIdx >= MODES.length) {
+      var bounceClass = direction === 'left' ? 'swipe-bounce-left' : 'swipe-bounce-right';
+      var bounceEl = getActiveEl(currentMode);
+      // Remove first + force reflow so re-adding the class always restarts the animation,
+      // even if a previous bounce is still in progress (e.g. rapid repeated edge swipes).
+      bounceEl.classList.remove(bounceClass);
+      void bounceEl.offsetWidth;
+      bounceEl.classList.add(bounceClass);
+      bounceEl.addEventListener('animationend', function cleanup() {
+        bounceEl.classList.remove(bounceClass);
+        bounceEl.removeEventListener('animationend', cleanup);
+      });
+      return;
+    }
+
+    isAnimating = true;
+    var nextMode = MODES[nextIdx];
+    var outClass = direction === 'left' ? 'slide-out-left' : 'slide-out-right';
+    var inClass  = direction === 'left' ? 'slide-in-right' : 'slide-in-left';
+    var outEl = getActiveEl(currentMode);
+
+    outEl.classList.add(outClass);
+    setTimeout(function () {
+      outEl.classList.remove(outClass);
+      currentMode = nextMode;
+      activateNavButton(currentMode);
+      showMode(currentMode);
+      var inEl = getActiveEl(currentMode);
+      inEl.classList.add(inClass);
+      setTimeout(function () {
+        inEl.classList.remove(inClass);
+        isAnimating = false;
+      }, ANIM_MS);
+    }, ANIM_MS);
+  }
+
   function onAllLoaded() {
     loadedCount++;
     if (loadedCount < TOTAL_FILES) { return; }
@@ -177,17 +256,40 @@
     for (var i = 0; i < buttons.length; i++) {
       (function (btn) {
         btn.addEventListener('click', function () {
+          if (isAnimating) { return; }
           currentMode = btn.getAttribute('data-mode');
-          for (var k = 0; k < buttons.length; k++) {
-            buttons[k].classList.remove('active');
-            buttons[k].setAttribute('aria-pressed', 'false');
-          }
-          btn.classList.add('active');
-          btn.setAttribute('aria-pressed', 'true');
+          activateNavButton(currentMode);
           showMode(currentMode);
         });
       }(buttons[i]));
     }
+
+    // Wire up swipe gestures — track a single touch identifier to ignore multi-touch
+    // gestures (pinch-zoom etc.) that would produce spurious large deltas.
+    var container = document.querySelector('.clock-container');
+    container.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) { touchId = null; return; }
+      touchId = e.touches[0].identifier;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    container.addEventListener('touchend', function (e) {
+      if (touchId === null) { return; }
+      var touch = null;
+      for (var i = 0; i < e.changedTouches.length; i++) {
+        if (e.changedTouches[i].identifier === touchId) {
+          touch = e.changedTouches[i];
+          break;
+        }
+      }
+      touchId = null;
+      if (!touch) { return; }
+      var deltaX = touch.clientX - touchStartX;
+      var deltaY = touch.clientY - touchStartY;
+      if (Math.abs(deltaX) >= SWIPE_THRESHOLD && Math.abs(deltaX) > Math.abs(deltaY)) {
+        navigateSwipe(deltaX < 0 ? 'left' : 'right');
+      }
+    }, { passive: true });
 
     // ── Timing helpers ──────────────────────────────────────────────────
     function msUntilNextMinute() {

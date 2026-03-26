@@ -12,7 +12,8 @@ A literary clock that displays the current time — and calendar context — thr
 - **Day of Week mode** — displays a literary passage for the current day of the week, refreshed at midnight
 - **Date mode** — displays a literary passage for today's calendar date (`month/day`), refreshed at midnight
 - **Month mode** — displays a literary passage for the current month, refreshed at the first instant of the next month
-- Mode toggle bar at the bottom of the page: **Clock | Day of Week | Date | Month | Info**
+- Mode toggle bar at the bottom of the page: **Clock | Week | Date | Month | Info**
+- Horizontal swipe navigation — swipe left to advance (Clock → Week → Date → Month → Info) or right to go back; works alongside the tab bar buttons
 - Highlights the key time/date phrase within each quote using `<strong>` tags
 - Shows the book title and author for every passage; links to Biblio.com when available
 - Responsive design — works on desktop, tablet, and mobile (portrait/landscape)
