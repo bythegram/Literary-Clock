@@ -1,4 +1,4 @@
-var CACHE_NAME = 'literary-clock-v7';
+var CACHE_NAME = 'literary-clock-v8';
 var ASSETS = [
   './',
   './index.html',
