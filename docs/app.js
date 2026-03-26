@@ -25,10 +25,6 @@
   var touchStartY = 0;
   var touchId = null;
 
-  var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
-                     'July', 'August', 'September', 'October', 'November', 'December'];
-
   function shuffleArray(arr) {
     for (var i = arr.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -63,9 +59,9 @@
   }
 
   function getTime(data) {
-    var date = new Date();
-    var hour = date.getHours();
-    var min = ('0' + date.getMinutes()).slice(-2);
+    var now = Temporal.Now.zonedDateTimeISO();
+    var hour = now.hour;
+    var min = ('0' + now.minute).slice(-2);
     var time = hour + ':' + min;
     var matches = data.filter(function (item) {
       return item.timecode === time;
@@ -78,7 +74,8 @@
   }
 
   function getDayOfWeek(data) {
-    var dayName = DAY_NAMES[new Date().getDay()];
+    var now = Temporal.Now.zonedDateTimeISO();
+    var dayName = now.toLocaleString('en-US', { weekday: 'long' });
     var matches = data.filter(function (item) {
       return item.day === dayName;
     });
@@ -91,8 +88,8 @@
   }
 
   function getDate(data) {
-    var now = new Date();
-    var dateKey = (now.getMonth() + 1) + '/' + now.getDate();
+    var today = Temporal.Now.plainDateISO();
+    var dateKey = today.month + '/' + today.day;
     var matches = data.filter(function (item) {
       return item.date === dateKey;
     });
@@ -101,14 +98,13 @@
       return buildQuoteResult(item, item.label);
     }
     // Fallback: show the date as bold text
-    var monthName = MONTH_NAMES[now.getMonth()];
-    var day = now.getDate();
-    var fallbackLabel = monthName.toLowerCase() + ' ' + day;
+    var fallbackLabel = today.toLocaleString('en-US', { month: 'long', day: 'numeric' }).toLowerCase();
     return { quote: '<strong>' + fallbackLabel + '</strong>', rawLength: fallbackLabel.length, book: '', author: '', biblio_link: null };
   }
 
   function getMonth(data) {
-    var monthName = MONTH_NAMES[new Date().getMonth()];
+    var now = Temporal.Now.zonedDateTimeISO();
+    var monthName = now.toLocaleString('en-US', { month: 'long' });
     var matches = data.filter(function (item) {
       return item.month === monthName;
     });
@@ -293,20 +289,21 @@
 
     // ── Timing helpers ──────────────────────────────────────────────────
     function msUntilNextMinute() {
-      var now = new Date();
-      return (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+      var now = Temporal.Now.zonedDateTimeISO();
+      var nextMinute = now.add({ minutes: 1 }).with({ second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 });
+      return now.until(nextMinute).total('milliseconds');
     }
 
     function msUntilMidnight() {
-      var now = new Date();
-      var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-      return midnight.getTime() - now.getTime();
+      var now = Temporal.Now.zonedDateTimeISO();
+      var tomorrow = now.add({ days: 1 }).with({ hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 });
+      return now.until(tomorrow).total('milliseconds');
     }
 
     function msUntilNextMonth() {
-      var now = new Date();
-      var firstOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-      return firstOfNextMonth.getTime() - now.getTime();
+      var now = Temporal.Now.zonedDateTimeISO();
+      var firstOfNextMonth = now.add({ months: 1 }).with({ day: 1, hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 });
+      return now.until(firstOfNextMonth).total('milliseconds');
     }
 
     // ── Clock: refresh at each minute boundary ───────────────────────────

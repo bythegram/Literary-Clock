@@ -49,7 +49,8 @@ Literary-Clock/
 
 | Layer | Technology | Notes |
 |---|---|---|
-| Language | Vanilla JavaScript **ES5** | The entire app is one IIFE in `docs/app.js` — no modules, no transpilation |
+| Language | Vanilla JavaScript (IIFE) | The entire app is one IIFE in `docs/app.js` — no modules, no transpilation; outer-scope variables use `var` |
+| Time API | **Temporal API** (native) | Clock logic uses `Temporal.Now.zonedDateTimeISO()` and `Temporal.Now.plainDateISO()` — requires a browser with native Temporal support (Chrome 121+, Firefox 139+, Safari 17.4+); no polyfill is bundled |
 | Styling | Custom CSS (`docs/style.css`) | CSS custom properties (`--color-bg`, `--color-text`, `--font-size-quote`, etc.); dark mode via `[data-theme="dark"]` on `<html>` |
 | Fonts | Self-hosted Playfair Display (quote serif, primary), Open Sans Condensed (UI sans-serif), Roboto Slab (fallback) | Declared in `docs/fonts.css`; woff2 files in `docs/fonts/` — **no CDN dependency**. `style.css` CSS reset includes `[hidden] { display: none !important }` to ensure the `hidden` HTML attribute is never overridden by a CSS `display` value. |
 | Offline / PWA | Service worker + Web App Manifest | `docs/sw.js` caches all assets; `docs/manifest.json` enables PWA install |
@@ -81,7 +82,7 @@ Every entry is a JSON object with these fields:
 
 - Format is `H:MM` — the hour has **no leading zero**, the minute is **zero-padded to two digits**.
 - Examples: `"0:00"`, `"0:05"`, `"9:07"`, `"13:01"`, `"23:59"`.
-- This matches exactly what `app.js` produces: `date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2)`.
+- This matches exactly what `app.js` produces: `var now = Temporal.Now.zonedDateTimeISO(); now.hour + ':' + ('0' + now.minute).slice(-2)`.
 - **Do NOT use** `"09:07"` (padded hour) — it will never match and the quote will never be shown.
 
 ### 4.3 Label Rules
@@ -107,13 +108,13 @@ Every entry is a JSON object with these fields:
 
 ## 5. JavaScript Conventions (`docs/app.js`)
 
-- **ES5 only** — use `var`, `function` declarations, and prototype-style code. Do **not** use `let`, `const`, arrow functions, template literals, classes, or any ES6+ syntax. The file has no transpilation step.
-- The entire file is wrapped in an immediately-invoked function expression (IIFE): `(function () { ... }());`
+- **ES5 IIFE structure** — the entire file is wrapped in `(function () { ... }());`; outer-scope variables use `var` and function declarations.
+- **Temporal API** — time extraction and duration logic use the native Temporal API (`Temporal.Now.zonedDateTimeISO()`, `Temporal.Now.plainDateISO()`, `.until()`, `.total('milliseconds')`). No legacy `Date` object usage in clock logic.
 - DOM manipulation uses `document.getElementById()` and manual `innerHTML`/`textContent` assignment — no jQuery, no framework.
 - The clock update cycle:
   1. On data load: call `updateDisplay()` immediately.
-  2. `setTimeout` fires at the **next wall-clock minute boundary** (`(60 - seconds) * 1000 - milliseconds` ms from now).
-  3. After that, a `setInterval` fires every 60 000 ms.
+  2. `setTimeout` fires at the **next wall-clock minute boundary** — calculated via `Temporal.Now.zonedDateTimeISO().until(nextMinute).total('milliseconds')`.
+  3. Each schedule function calls itself recursively after firing, re-anchoring to the next real boundary.
 - `biblio_link` is optional — always guard with `if (litTime.biblio_link)` before creating an anchor element.
 
 ---
@@ -307,7 +308,7 @@ Current overall coverage is ~90.9% (1,309 / 1,440 minutes covered). Priority hou
 |---|---|
 | Data file to edit | `docs/litclock.json` — edit this directly |
 | Timecode format | `H:MM` — no leading zero on hour, zero-padded minute |
-| JS style | ES5 IIFE — `var`, no arrow functions, no modules |
+| JS style | ES5 IIFE structure — `var`, no arrow functions, no modules; Temporal API for all time logic |
 | Quote length | Prefer < 300 characters |
 | Label | Lowercase, exact substring of quote |
 | New dependencies | Do not add npm/pip dependencies unless absolutely necessary |
