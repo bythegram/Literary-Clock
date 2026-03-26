@@ -60,6 +60,7 @@ Literary-Clock/
 │   ├── litdates.json               # Dataset: literary quotes for specific calendar dates (Date mode)
 │   └── favicon.ico
 ├── scripts/
+│   ├── audit_litclock.py           # Audits litclock.json for day/month/date references and merges quotes into litdays/litmonths/litdates
 │   ├── add_biblio_links.py         # Populates isbn and biblio_link fields; supports --file to target any dataset
 │   └── add_public_domain.py        # Populates public_domain field via Open Library API
 ├── package.json                    # Dev dependency for local server (npx serve)
@@ -166,6 +167,13 @@ Example `litdays.json` entry:
 ### Helper Scripts
 
 ```bash
+# Audit litclock.json and copy matching quotes into litdays.json,
+# litmonths.json, and litdates.json (litclock.json is never modified)
+python3 scripts/audit_litclock.py
+
+# Preview what would be added without writing any files
+python3 scripts/audit_litclock.py --dry-run
+
 # Populate isbn and biblio_link for entries in litclock.json (default)
 python3 scripts/add_biblio_links.py
 
