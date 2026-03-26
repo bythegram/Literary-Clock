@@ -50,7 +50,7 @@ Literary-Clock/
 | Layer | Technology | Notes |
 |---|---|---|
 | Language | Vanilla JavaScript (IIFE) | The entire app is one IIFE in `docs/app.js` — no modules, no transpilation; outer-scope variables use `var` |
-| Time API | **Temporal API** (native) | Clock logic uses `Temporal.Now.zonedDateTimeISO()` and `Temporal.Now.plainDateISO()` — requires a browser with native Temporal support (Chrome 121+, Firefox 139+, Safari 17.4+); no polyfill is bundled |
+| Time API | **Temporal API** (native) | Clock logic uses `Temporal.Now.zonedDateTimeISO()` and `Temporal.Now.plainDateISO()` — requires a browser with native [Temporal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal) support; see [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal#browser_compatibility). No polyfill is bundled. |
 | Styling | Custom CSS (`docs/style.css`) | CSS custom properties (`--color-bg`, `--color-text`, `--font-size-quote`, etc.); dark mode via `[data-theme="dark"]` on `<html>` |
 | Fonts | Self-hosted Playfair Display (quote serif, primary), Open Sans Condensed (UI sans-serif), Roboto Slab (fallback) | Declared in `docs/fonts.css`; woff2 files in `docs/fonts/` — **no CDN dependency**. `style.css` CSS reset includes `[hidden] { display: none !important }` to ensure the `hidden` HTML attribute is never overridden by a CSS `display` value. |
 | Offline / PWA | Service worker + Web App Manifest | `docs/sw.js` caches all assets; `docs/manifest.json` enables PWA install |

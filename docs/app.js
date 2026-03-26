@@ -1,4 +1,14 @@
 (function () {
+  // Guard: Temporal API is required. Show a clear in-page message for unsupported browsers
+  // rather than crashing silently with a ReferenceError.
+  if (typeof Temporal === 'undefined') {
+    var quoteEl = document.getElementById('quote');
+    if (quoteEl) {
+      quoteEl.innerHTML = '<span>Your browser does not support the Temporal API required by this app. Please upgrade to a modern browser.</span>';
+    }
+    return;
+  }
+
   var clockData = [];
   var daysData = [];
   var monthsData = [];
@@ -291,19 +301,19 @@
     function msUntilNextMinute() {
       var now = Temporal.Now.zonedDateTimeISO();
       var nextMinute = now.add({ minutes: 1 }).with({ second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 });
-      return now.until(nextMinute).total('milliseconds');
+      return Math.max(1, Math.ceil(now.until(nextMinute).total('milliseconds')));
     }
 
     function msUntilMidnight() {
       var now = Temporal.Now.zonedDateTimeISO();
       var tomorrow = now.add({ days: 1 }).with({ hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 });
-      return now.until(tomorrow).total('milliseconds');
+      return Math.max(1, Math.ceil(now.until(tomorrow).total('milliseconds')));
     }
 
     function msUntilNextMonth() {
       var now = Temporal.Now.zonedDateTimeISO();
       var firstOfNextMonth = now.add({ months: 1 }).with({ day: 1, hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 });
-      return now.until(firstOfNextMonth).total('milliseconds');
+      return Math.max(1, Math.ceil(now.until(firstOfNextMonth).total('milliseconds')));
     }
 
     // ── Clock: refresh at each minute boundary ───────────────────────────
