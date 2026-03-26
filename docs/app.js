@@ -46,15 +46,18 @@
   }
 
   function buildQuoteResult(item, fallbackLabel) {
-    var quote = item.quote.toLowerCase();
-    var label = (item.label || fallbackLabel || '').toLowerCase();
-    var idx = label ? quote.indexOf(label) : -1;
+    var quote = item.quote;
+    var label = item.label || fallbackLabel || '';
+    var quoteLower = quote.toLowerCase();
+    var labelLower = label.toLowerCase();
+    var idx = labelLower ? quoteLower.indexOf(labelLower) : -1;
     var quoteFinal;
     if (idx !== -1) {
       var before = quote.substring(0, idx);
-      var after = quote.substring(idx + label.length);
+      var matched = quote.substring(idx, idx + labelLower.length);
+      var after = quote.substring(idx + labelLower.length);
       quoteFinal = (before ? '<span>' + before + '</span>' : '') +
-                   '<strong>' + label + '</strong>' +
+                   '<strong>' + matched + '</strong>' +
                    (after ? '<span>' + after + '</span>' : '');
     } else {
       quoteFinal = '<span>' + quote + '</span>';
@@ -91,10 +94,10 @@
     });
     var item = matches[0];
     if (item) {
-      return buildQuoteResult(item, dayName.toLowerCase());
+      return buildQuoteResult(item, dayName);
     }
     // Fallback: show day name as bold text
-    return { quote: '<strong>' + dayName.toLowerCase() + '</strong>', rawLength: dayName.length, book: '', author: '', biblio_link: null };
+    return { quote: '<strong>' + dayName + '</strong>', rawLength: dayName.length, book: '', author: '', biblio_link: null };
   }
 
   function getDate(data) {
@@ -108,7 +111,7 @@
       return buildQuoteResult(item, item.label);
     }
     // Fallback: show the date as bold text
-    var fallbackLabel = today.toLocaleString('en-US', { month: 'long', day: 'numeric' }).toLowerCase();
+    var fallbackLabel = today.toLocaleString('en-US', { month: 'long', day: 'numeric' });
     return { quote: '<strong>' + fallbackLabel + '</strong>', rawLength: fallbackLabel.length, book: '', author: '', biblio_link: null };
   }
 
@@ -120,10 +123,10 @@
     });
     var item = matches[0];
     if (item) {
-      return buildQuoteResult(item, monthName.toLowerCase());
+      return buildQuoteResult(item, monthName);
     }
     // Fallback: show month name as bold text
-    return { quote: '<strong>' + monthName.toLowerCase() + '</strong>', rawLength: monthName.length, book: '', author: '', biblio_link: null };
+    return { quote: '<strong>' + monthName + '</strong>', rawLength: monthName.length, book: '', author: '', biblio_link: null };
   }
 
   function renderQuoteResult(litTime) {
