@@ -1,8 +1,7 @@
-var CACHE_NAME = 'literary-clock-v9';
+var CACHE_NAME = 'literary-clock-v10';
 var ASSETS = [
   './',
   './index.html',
-  './temporal-loader.js',
   './temporal-polyfill.js',
   './app.js',
   './theme.js',
