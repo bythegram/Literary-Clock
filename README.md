@@ -30,7 +30,7 @@ A literary clock that displays the current time — and calendar context — thr
 | Layer | Technology |
 |---|---|
 | Language | Vanilla JavaScript (ES5 IIFE) |
-| Temporal Polyfill | [`@js-temporal/polyfill`](https://github.com/js-temporal/temporal-polyfill) v0.5.1 — self-hosted at `docs/temporal-polyfill.js`; loaded conditionally by `docs/temporal-loader.js` only when the native Temporal API is absent (e.g. iOS PWA standalone mode) |
+| Temporal Polyfill | [`@js-temporal/polyfill`](https://github.com/js-temporal/temporal-polyfill) v0.5.1 — self-hosted at `docs/temporal-polyfill.js`; always loaded before `app.js`; exposes `Temporal` globally only when the native API is absent (e.g. iOS PWA standalone mode) |
 | Styling | Custom CSS (`style.css`) with CSS custom properties; dark mode via `data-theme` attribute |
 | Fonts | Self-hosted Playfair Display (quote serif, primary) and Open Sans Condensed (UI sans-serif); Roboto Slab is kept as a fallback. All declared in `fonts.css`, files in `docs/fonts/` |
 | Data | JSON |
@@ -47,8 +47,7 @@ Literary-Clock/
 ├── docs/                           # Deployed app — served directly by GitHub Pages
 │   ├── index.html                  # App shell HTML (CSP meta tag, no inline scripts)
 │   ├── app.js                      # All app logic: shuffle, time-matching, mode switching, DOM updates
-│   ├── temporal-polyfill.js        # @js-temporal/polyfill v0.5.1 UMD bundle — polyfills Temporal where not natively available (e.g. iOS PWA)
-│   ├── temporal-loader.js          # Feature-detection loader — injects temporal-polyfill.js only when Temporal is absent
+│   ├── temporal-polyfill.js        # @js-temporal/polyfill v0.5.1 UMD bundle — always loaded before app.js; exposes Temporal globally only when not natively available (e.g. iOS PWA)
 │   ├── theme.js                    # Dark/light mode detection (loaded before CSS)
 │   ├── sw-register.js              # Service worker registration
 │   ├── style.css                   # Styles (CSS custom properties, dark mode, responsive layout, nav bar)

@@ -24,8 +24,7 @@ Literary-Clock/
 ├── docs/                       # ← The entire deployed application lives here
 │   ├── index.html              # App shell HTML; sets data-theme for dark mode, enforces CSP
 │   ├── app.js                  # All clock logic (ES5 IIFE); no build or bundler
-│   ├── temporal-polyfill.js    # @js-temporal/polyfill v0.5.1 UMD bundle; polyfills Temporal where not natively available (e.g. iOS PWA standalone)
-│   ├── temporal-loader.js      # Feature-detection loader — loaded before app.js; injects temporal-polyfill.js via document.write only when Temporal is absent
+│   ├── temporal-polyfill.js    # @js-temporal/polyfill v0.5.1 UMD bundle; always loaded before app.js; exposes Temporal globally only when not natively available (e.g. iOS PWA standalone)
 │   ├── theme.js                # Dark/light theme detection — loaded before CSS in <head>
 │   ├── sw-register.js          # Service worker registration — loaded at end of <body>
 │   ├── style.css               # Custom CSS; CSS custom properties, dark mode, responsive layout
