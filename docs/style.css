@@ -278,6 +278,15 @@ strong {
   opacity: 0.8;
 }
 
+/* ── Nav Bar Hidden State (shake toggle) ─────────────────────────────── */
+/* When the nav bar is hidden, allow the content areas to occupy the full
+   viewport height instead of the reduced calc(100dvh - nav-height). */
+body.nav-hidden .clock-container,
+body.nav-hidden .info-panel {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 /* ── Swipe Navigation Animations ─────────────────────────────────────── */
 /* will-change is scoped to the animation classes so it's only active during
    transitions, avoiding permanent memory overhead on low-end devices. */

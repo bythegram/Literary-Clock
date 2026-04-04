@@ -14,6 +14,7 @@ A literary clock that displays the current time — and calendar context — thr
 - **Month mode** — displays a literary passage for the current month, refreshed at the first instant of the next month
 - Mode toggle bar at the bottom of the page: **Clock | Week | Date | Month | Info**
 - Horizontal swipe navigation — swipe left to advance (Clock → Week → Date → Month → Info) or right to go back; works alongside the tab bar buttons
+- **Shake to toggle navigation bar** — shake the device to hide or show the bottom nav bar for a distraction-free reading experience; uses the DeviceMotion API with graceful fallback (no-op on unsupported browsers; requests permission first on iOS 13+)
 - Highlights the key time/date phrase within each quote using `<strong>` tags
 - Shows the book title and author for every passage; links to Biblio.com when available
 - Responsive design — works on desktop, tablet, and mobile (portrait/landscape)

@@ -216,6 +216,77 @@
       : document.getElementById('clock-content');
   }
 
+  // ── Shake to toggle nav bar ──────────────────────────────────────────────
+  function toggleNavBar() {
+    var navBar = document.querySelector('.nav-bar');
+    if (!navBar) { return; }
+    var willHide = !navBar.hidden;
+    navBar.hidden = willHide;
+    document.body.classList.toggle('nav-hidden', willHide);
+  }
+
+  // Initialises shake detection using the DeviceMotion API.
+  // On iOS 13+ the API requires an explicit user permission grant; the request
+  // is deferred to the first tap/click so it fires from within a user gesture.
+  function initShakeDetection() {
+    if (typeof DeviceMotionEvent === 'undefined') { return; }
+
+    var SHAKE_THRESHOLD = 15;     // sum of |Δaccel| per axis (m/s²) for a shake
+    var SHAKE_COOLDOWN_MS = 1000; // minimum ms between registered shakes
+    var lastX = 0, lastY = 0, lastZ = 0;
+    var lastShakeTime = 0;
+    var firstSample = true;
+
+    function onMotion(e) {
+      var acc = e.acceleration;
+      // Fall back to accelerationIncludingGravity when acceleration is absent or null
+      if (!acc || (acc.x === null && acc.y === null && acc.z === null)) {
+        acc = e.accelerationIncludingGravity;
+      }
+      if (!acc) { return; }
+
+      var x = acc.x || 0;
+      var y = acc.y || 0;
+      var z = acc.z || 0;
+
+      // Seed the previous-value variables on the first sample without triggering
+      if (firstSample) {
+        lastX = x; lastY = y; lastZ = z;
+        firstSample = false;
+        return;
+      }
+
+      var delta = Math.abs(x - lastX) + Math.abs(y - lastY) + Math.abs(z - lastZ);
+      lastX = x; lastY = y; lastZ = z;
+
+      if (delta > SHAKE_THRESHOLD) {
+        var now = Date.now();
+        if (now - lastShakeTime > SHAKE_COOLDOWN_MS) {
+          lastShakeTime = now;
+          toggleNavBar();
+        }
+      }
+    }
+
+    function attachListener() {
+      window.addEventListener('devicemotion', onMotion, false);
+    }
+
+    // iOS 13+ requires explicit permission before reading DeviceMotionEvent
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+      document.addEventListener('click', function requestPermOnce() {
+        document.removeEventListener('click', requestPermOnce);
+        DeviceMotionEvent.requestPermission()
+          .then(function (state) {
+            if (state === 'granted') { attachListener(); }
+          })
+          .catch(function () {});
+      });
+    } else {
+      attachListener();
+    }
+  }
+
   function navigateSwipe(direction) {
     if (isAnimating) { return; }
     var idx = MODES.indexOf(currentMode);
@@ -389,6 +460,8 @@
         scheduleMonthUpdate();
       }
     });
+
+    initShakeDetection();
   }
 
   fetch('litclock.json')
