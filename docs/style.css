@@ -280,7 +280,8 @@ strong {
 
 /* ── Nav Bar Hidden State (shake toggle) ─────────────────────────────── */
 /* When the nav bar is hidden, allow the content areas to occupy the full
-   viewport height instead of the reduced calc(100dvh - nav-height). */
+   viewport height instead of the reduced
+   calc(100dvh - var(--nav-total-height)). */
 body.nav-hidden .clock-container,
 body.nav-hidden .info-panel {
   min-height: 100vh;

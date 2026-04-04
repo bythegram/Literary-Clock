@@ -272,16 +272,31 @@
       window.addEventListener('devicemotion', onMotion, false);
     }
 
-    // iOS 13+ requires explicit permission before reading DeviceMotionEvent
+    // iOS 13+ requires explicit permission before reading DeviceMotionEvent.
+    // Keep the click listener active until permission is granted so the user
+    // can retry after dismissing or denying the first prompt.
     if (typeof DeviceMotionEvent.requestPermission === 'function') {
-      document.addEventListener('click', function requestPermOnce() {
-        document.removeEventListener('click', requestPermOnce);
+      var motionPermissionGranted = false;
+      var isRequestingMotionPermission = false;
+
+      function requestPermOnClick() {
+        if (motionPermissionGranted || isRequestingMotionPermission) { return; }
+        isRequestingMotionPermission = true;
         DeviceMotionEvent.requestPermission()
           .then(function (state) {
-            if (state === 'granted') { attachListener(); }
+            isRequestingMotionPermission = false;
+            if (state === 'granted') {
+              motionPermissionGranted = true;
+              document.removeEventListener('click', requestPermOnClick);
+              attachListener();
+            }
           })
-          .catch(function () {});
-      });
+          .catch(function () {
+            isRequestingMotionPermission = false;
+          });
+      }
+
+      document.addEventListener('click', requestPermOnClick);
     } else {
       attachListener();
     }
