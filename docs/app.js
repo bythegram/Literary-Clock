@@ -231,7 +231,8 @@
   function initShakeDetection() {
     if (typeof DeviceMotionEvent === 'undefined') { return; }
 
-    var SHAKE_THRESHOLD = 15;     // sum of |Δaccel| per axis (m/s²) for a shake
+    var SHAKE_THRESHOLD = 15;     // sum of |Δaccel| per axis (m/s²); 15 gives reliable detection
+                                  // for deliberate shakes while ignoring ordinary handling/walking
     var SHAKE_COOLDOWN_MS = 1000; // minimum ms between registered shakes
     var lastX = 0, lastY = 0, lastZ = 0;
     var lastShakeTime = 0;
@@ -260,7 +261,7 @@
       lastX = x; lastY = y; lastZ = z;
 
       if (delta > SHAKE_THRESHOLD) {
-        var now = Date.now();
+        var now = Temporal.Now.instant().epochMilliseconds;
         if (now - lastShakeTime > SHAKE_COOLDOWN_MS) {
           lastShakeTime = now;
           toggleNavBar();
