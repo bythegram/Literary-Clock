@@ -14,6 +14,7 @@
   var monthsData = [];
   var datesData = [];
   var currentMode = 'clock';
+  var lastRenderedMonth = null;
   var loadedCount = 0;
   var TOTAL_FILES = 4;
 
@@ -121,8 +122,8 @@
   }
 
   function getMonth(data) {
-    var now = Temporal.Now.zonedDateTimeISO();
-    var monthName = now.toLocaleString('en-US', { month: 'long' });
+    var monthName = getCurrentMonthName();
+    lastRenderedMonth = monthName;
     var matches = data.filter(function (item) {
       return item.month === monthName;
     });
@@ -132,6 +133,10 @@
     }
     // Fallback: show month name as bold text
     return { quote: '<strong>' + monthName + '</strong>', rawLength: monthName.length, book: '', author: '', biblio_link: null };
+  }
+
+  function getCurrentMonthName() {
+    return Temporal.Now.zonedDateTimeISO().toLocaleString('en-US', { month: 'long' });
   }
 
   function renderQuoteResult(litTime) {
@@ -404,12 +409,6 @@
       return Math.max(1, Math.ceil(now.until(tomorrow).total('milliseconds')));
     }
 
-    function msUntilNextMonth() {
-      var now = Temporal.Now.zonedDateTimeISO();
-      var firstOfNextMonth = now.add({ months: 1 }).with({ day: 1, hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 });
-      return Math.max(1, Math.ceil(now.until(firstOfNextMonth).total('milliseconds')));
-    }
-
     // ── Clock: refresh at each minute boundary ───────────────────────────
     var clockTimeoutId = null;
     function scheduleClockUpdate() {
@@ -427,7 +426,11 @@
     }
     scheduleClockUpdate();
 
-    // ── Day of Week + Date: refresh at midnight (new day) ────────────────
+    // ── Day of Week + Date + Month: refresh at midnight (new day) ────────
+    // Note: month updates are piggybacked here rather than using a separate
+    // month timer because a full-month delay (28–31 days in ms) exceeds the
+    // 32-bit integer limit used by setTimeout internally (~24.8 days max),
+    // which would cause the timer to fire immediately and loop continuously.
     var dayTimeoutId = null;
     function scheduleDayUpdate() {
       if (dayTimeoutId !== null) {
@@ -440,28 +443,16 @@
           renderQuoteResult(getDayOfWeek(daysData));
         } else if (currentMode === 'date') {
           renderQuoteResult(getDate(datesData));
+        } else if (currentMode === 'month') {
+          // Only re-render when the month has actually turned over
+          if (lastRenderedMonth === null || getCurrentMonthName() !== lastRenderedMonth) {
+            renderQuoteResult(getMonth(monthsData));
+          }
         }
         scheduleDayUpdate();
       }, msUntilMidnight());
     }
     scheduleDayUpdate();
-
-    // ── Month: refresh at the start of the next month ────────────────────
-    var monthTimeoutId = null;
-    function scheduleMonthUpdate() {
-      if (monthTimeoutId !== null) {
-        clearTimeout(monthTimeoutId);
-        monthTimeoutId = null;
-      }
-      monthTimeoutId = setTimeout(function () {
-        monthTimeoutId = null;
-        if (currentMode === 'month') {
-          renderQuoteResult(getMonth(monthsData));
-        }
-        scheduleMonthUpdate();
-      }, msUntilNextMonth());
-    }
-    scheduleMonthUpdate();
 
     // ── Page Visibility API: re-sync when the tab becomes visible ────────
     // Browsers throttle background timers and device sleep skips them
@@ -472,7 +463,6 @@
         showMode(currentMode);
         scheduleClockUpdate();
         scheduleDayUpdate();
-        scheduleMonthUpdate();
       }
     });
 
