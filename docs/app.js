@@ -231,8 +231,7 @@
   function initShakeDetection() {
     if (typeof DeviceMotionEvent === 'undefined') { return; }
 
-    var SHAKE_THRESHOLD = 15;     // sum of |Δaccel| per axis (m/s²); 15 gives reliable detection
-                                  // for deliberate shakes while ignoring ordinary handling/walking
+    var SHAKE_THRESHOLD = 15;     // sum of |Δaccel| per axis (m/s²); 15 is sensitive enough for a deliberate shake but ignores ordinary handling/walking
     var SHAKE_COOLDOWN_MS = 1000; // minimum ms between registered shakes
     var lastX = 0, lastY = 0, lastZ = 0;
     var lastShakeTime = 0;
