@@ -14,6 +14,7 @@
   var monthsData = [];
   var datesData = [];
   var currentMode = 'clock';
+  var lastRenderedMonth = null;
   var loadedCount = 0;
   var TOTAL_FILES = 4;
 
@@ -121,8 +122,8 @@
   }
 
   function getMonth(data) {
-    var now = Temporal.Now.zonedDateTimeISO();
-    var monthName = now.toLocaleString('en-US', { month: 'long' });
+    var monthName = getCurrentMonthName();
+    lastRenderedMonth = monthName;
     var matches = data.filter(function (item) {
       return item.month === monthName;
     });
@@ -132,6 +133,10 @@
     }
     // Fallback: show month name as bold text
     return { quote: '<strong>' + monthName + '</strong>', rawLength: monthName.length, book: '', author: '', biblio_link: null };
+  }
+
+  function getCurrentMonthName() {
+    return Temporal.Now.zonedDateTimeISO().toLocaleString('en-US', { month: 'long' });
   }
 
   function renderQuoteResult(litTime) {
@@ -439,7 +444,10 @@
         } else if (currentMode === 'date') {
           renderQuoteResult(getDate(datesData));
         } else if (currentMode === 'month') {
-          renderQuoteResult(getMonth(monthsData));
+          // Only re-render when the month has actually turned over
+          if (lastRenderedMonth === null || getCurrentMonthName() !== lastRenderedMonth) {
+            renderQuoteResult(getMonth(monthsData));
+          }
         }
         scheduleDayUpdate();
       }, msUntilMidnight());
