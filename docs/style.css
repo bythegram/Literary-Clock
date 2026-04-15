@@ -46,6 +46,9 @@ html {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+  /* Fill iOS safe-area gaps (notch / Dynamic Island / home indicator) with
+     the theme background so no white bars appear in portrait or landscape. */
+  background-color: var(--color-bg);
 }
 
 body {
@@ -84,7 +87,12 @@ strong {
   justify-content: flex-start;
   min-height: calc(100vh - var(--nav-total-height));
   min-height: calc(100dvh - var(--nav-total-height));
-  padding: 2rem 1.5rem 2rem;
+  /* Top inset keeps content below the status bar / Dynamic Island;
+     side insets avoid the notch in landscape; bottom keeps room for the nav. */
+  padding: calc(2rem + env(safe-area-inset-top, 0px))
+           max(1.5rem, env(safe-area-inset-right, 0px))
+           2rem
+           max(1.5rem, env(safe-area-inset-left, 0px));
   overflow: hidden;
 }
 
@@ -195,7 +203,8 @@ strong {
   justify-content: center;
   background-color: var(--color-bg-nav);
   border-top: 1px solid rgba(128, 128, 128, 0.2);
-  padding: 0;
+  /* Side insets keep the nav buttons away from the notch in landscape. */
+  padding: 0 env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
 }
 
 .mode-nav {
@@ -258,7 +267,7 @@ strong {
   text-align: center;
   font-family: var(--font-ui);
   font-size: 1.1rem;
-  padding: 0 1.5rem;
+  padding: 0;
   min-height: calc(100vh - var(--nav-total-height));
   min-height: calc(100dvh - var(--nav-total-height));
   width: 100%;
