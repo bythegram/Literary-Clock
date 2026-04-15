@@ -267,10 +267,7 @@ strong {
   text-align: center;
   font-family: var(--font-ui);
   font-size: 1.1rem;
-  padding: env(safe-area-inset-top, 0px)
-           max(1.5rem, env(safe-area-inset-right, 0px))
-           0
-           max(1.5rem, env(safe-area-inset-left, 0px));
+  padding: 0;
   min-height: calc(100vh - var(--nav-total-height));
   min-height: calc(100dvh - var(--nav-total-height));
   width: 100%;
